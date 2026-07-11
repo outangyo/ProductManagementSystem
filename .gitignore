@@ -1,0 +1,42 @@
+## User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPS/
+[Rr]elease/
+[Rr]eleasePS/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+## Visual Studio cache and settings
+.vs/
+
+## Database/Local DB files
+*.mdf
+*.ldf
+*.db
+*.db-shm
+*.db-wal
+
+## Node & Angular
+node_modules/
+.angular/
+dist/
+/ProductManagementSystem.Web/dist/
+/ProductManagementSystem.Web/node_modules/
+/ProductManagementSystem.Web/.angular/
+/ProductManagementSystem.Web/bin/
+/ProductManagementSystem.Web/obj/
+
+## VS Code
+.vscode/
+
+## Local environment files
+.env
+.env.local
+.env.*.local
