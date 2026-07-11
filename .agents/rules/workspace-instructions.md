@@ -65,3 +65,16 @@
 ## 5. กติกาและแนวทางการพัฒนา (Development Rules)
 * **การใช้สิทธิ์และการรันคำสั่ง (Permission & Command Execution):** AI ควรวางแผนการรันคำสั่งต่าง ๆ หรือการแก้ไขไฟล์โดยการรวบรวมทำพร้อมกันเป็นรอบ ๆ (Batching/Group operations) เพื่อลดภาระและไม่ให้ผู้พัฒนา (Developer) ต้องคอยกดยืนยัน (Approve/Enter) บ่อย ๆ ในระบบความปลอดภัยของ Antigravity
 * **การแลกเปลี่ยนและโต้แย้งทางเทคนิค (Active Collaboration & Feedback):** เมื่อผู้พัฒนา (Developer) สั่งงาน หรือให้ทำในสิ่งที่มีความผิดพลาด มีช่องโหว่ หรือมีจุดที่น่าสงสัยสังเกตได้ AI จะต้องทักท้วง แนะนำ และร่วมพูดคุยแลกเปลี่ยนความเห็นเพื่อหาวิธีที่ดีที่สุดร่วมกัน ไม่ทำตามคำสั่งโดยไร้ข้อสงสัย (No blind obedience) เพื่อให้เกิดการพูดคุยและการเรียนรู้ร่วมกันในการพัฒนาโค้ด
+* **การยืนยันก่อนลงมือทำ (Explicit Confirmation before Action):** ก่อนจะสร้างไฟล์ แก้ไขโค้ด หรือรันคำสั่งใด ๆ ทุกครั้ง ห้าม AI ลงมือทำโดยพละการ ต้องเสนอรายละเอียดให้ผู้พัฒนา (Developer) อ่านและอนุมัติว่า "จะให้เริ่มทำเลยไหม" เสมอ เพื่อรักษาจังหวะการเรียนรู้ร่วมกันทีละสเต็ปอย่างรอบคอบ
+
+## 6. สถานะการทำงานปัจจุบัน (Current Progress Tracking)
+* **ล่าสุดทำอะไรเสร็จไปแล้ว:**
+  * [x] ออกแบบและสร้าง Entities: User, Category, Product ในโปรเจค `.Db`
+  * [x] สร้าง `AppDbContext.cs` พร้อมกำหนดกติกาการเชื่อมโยงข้อมูล (Fluent API) และ Seed Data เริ่มต้น
+  * [x] ดึงข้อมูลความลับ JWT Key ออกไปเก็บใน User Secrets ของเครื่องเพื่อความปลอดภัย และล้างคีย์ใน `appsettings.json` เป็นค่าว่าง
+  * [x] ลงทะเบียนบริการ JWT Bearer Authentication และติดตั้ง Middleware ใน `Program.cs` ฝั่ง API
+  * [x] รัน Migration (`InitialCreate`) และอัปเดตตารางเข้าสู่ฐานข้อมูลจริงบน SQL Server (localhost) เรียบร้อย
+* **เป้าหมายสเต็ปถัดไป:**
+  * [ ] พัฒนาระบบ Authentication ฝั่ง API (สร้าง DTOs, TokenService, และ AuthController)
+  * [ ] พัฒนาระบบ Product & Category CRUD API
+  * [ ] พัฒนาหน้าบ้านฝั่ง Angular (Login, Auth Guard, Dashboard, CRUD)
