@@ -1,0 +1,52 @@
+using Microsoft.IdentityModel.Tokens;
+using ProductManagementSystem.Db.Entities;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
+namespace ProductManagementSystem.API.Services;
+
+public class TokenService : ITokenService
+{
+    private readonly IConfiguration _configuration;
+
+    public TokenService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
+    public string GenerateToken(User user)
+    {
+        // 1. ดึงคีย์ลับจาก User Secrets และนำมาแปรรูปเป็นกุญแจเข้ารหัส
+        var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
+        // 2. กำหนดขั้นตอนการเซ็นลายเซ็นดิจิทัลด้วยอัลกอริทึม SHA256
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+        // 3. แนบข้อมูลของผู้ใช้เข้าไปในตั๋ว (เรียกว่า Claims)
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim("FullName", user.FullName ?? string.Empty)
+        };
+
+        // 4. ประกอบร่างตั๋ว JWT (ตั้งเวลาหมดอายุ, ระบุผู้ออกตั๋ว, ผู้รับตั๋ว, และเซ็นชื่อกำกับ)
+        var expiryMinutes = double.Parse(_configuration["Jwt:ExpiryInMinutes"] ?? "60");
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddMinutes(expiryMinutes),
+            SigningCredentials = creds,
+            Issuer = _configuration["Jwt:Issuer"],
+            Audience = _configuration["Jwt:Audience"]
+        };
+
+        // 5. สั่งให้เขียนตั๋วออกมาเป็น String ยาว ๆ ส่งกลับไปใช้งาน
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return tokenHandler.WriteToken(token);
+    }
+}
