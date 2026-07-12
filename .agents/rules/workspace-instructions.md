@@ -83,5 +83,7 @@
   * [x] พัฒนาระบบแบ่งบทบาทความปลอดภัยหลังบ้าน (Role-based Authorization) โดยล็อกสิทธิ์การเขียน/ลบ (POST, PUT, DELETE) ให้เฉพาะ Admin และเปิดให้อ่านได้อย่างเดียว (GET) สำหรับ User เรียบร้อย
   * [x] พัฒนาระบบต่ออายุสิทธิ์หลักด้วยตั๋วสำรอง (Refresh Token) พร้อมกระบวนการหมุนเวียนคีย์ (Token Rotation) ในฝั่งหลังบ้านเรียบร้อย
   * [x] พัฒนาหน้าบ้านฝั่ง Angular (Login, Auth Guard, Dashboard Layout, Categories CRUD, Products CRUD พร้อม Pagination & Search) เสร็จสิ้นเรียบร้อย
-* **เป้าหมายสเต็ปถัดไป:**
-  * [ ] เขียน Unit Test (xUnit) ฝั่งหลังบ้านครอบคลุม Service Layer
+* **เป้าหมายสเต็ปถัดไป (เรียงตามลำดับที่วางแผนร่วมกับ bro):**
+  * [ ] 1. พัฒนาระบบอัปโหลดรูปภาพสินค้าจริง (File Upload) ทั้งหน้าบ้านและหลังบ้าน
+  * [ ] 2. เขียน Unit Test (xUnit) ฝั่งหลังบ้านครอบคลุม Service Layer (TokenService)
+  * [ ] 3. บรรจุตู้คอนเทนเนอร์ (Dockerize) ทั้งฝั่ง Backend และ Frontend ในขั้นตอนสุดท้าย
