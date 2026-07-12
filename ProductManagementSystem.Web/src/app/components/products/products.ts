@@ -88,8 +88,16 @@ export class Products implements OnInit {
     });
   }
 
-  onSearch(event: Event): void {
+  onSearch(query: string, event: Event): void {
     event.preventDefault();
+    this.searchQuery.set(query.trim());
+    this.currentPage.set(1); // รีเซ็ตกลับไปหน้าแรกสุด
+    this.loadProducts();
+  }
+
+  onClearSearch(input: HTMLInputElement): void {
+    input.value = '';
+    this.searchQuery.set('');
     this.currentPage.set(1); // รีเซ็ตกลับไปหน้าแรกสุด
     this.loadProducts();
   }

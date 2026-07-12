@@ -14,17 +14,27 @@
 
   <!-- Search and Filtering Toolbar -->
   <div class="toolbar">
-    <form (submit)="onSearch($event)" class="search-form">
+    <form (submit)="onSearch(searchInput.value, $event)" class="search-form">
       <div class="search-input-wrapper">
         <span class="search-icon">🔍</span>
         <input 
+          #searchInput
           type="text" 
           placeholder="Search products by name..." 
           [value]="searchQuery()" 
-          (input)="searchQuery.set($any($event.target).value)"
+          (input)="0"
         />
       </div>
       <button type="submit" class="btn-secondary">Search</button>
+      <button 
+        *ngIf="searchInput.value || searchQuery()" 
+        type="button" 
+        (click)="onClearSearch(searchInput)" 
+        class="btn-clear"
+        title="Clear search filter"
+      >
+        Clear
+      </button>
     </form>
   </div>
 
