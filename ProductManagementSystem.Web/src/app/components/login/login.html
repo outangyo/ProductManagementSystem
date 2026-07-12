@@ -1,0 +1,62 @@
+<div class="login-container">
+  <div class="background-glow-1"></div>
+  <div class="background-glow-2"></div>
+  
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-icon">🔑</div>
+      <h2>ยินดีต้อนรับ</h2>
+      <p>ระบบบริหารจัดการสินค้าและหมวดหมู่</p>
+    </div>
+
+    <!-- กล่องโชว์เออร์เรอร์ข้อความภาษาไทยจากหลังบ้าน -->
+    <div class="alert alert-danger" *ngIf="errorMessage()">
+      <span class="alert-icon">⚠️</span>
+      <span class="alert-text">{{ errorMessage() }}</span>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
+      
+      <!-- ช่อง Username -->
+      <div class="form-group">
+        <label for="username">ชื่อผู้ใช้งาน (Username)</label>
+        <div class="input-wrapper" [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          <span class="input-icon">👤</span>
+          <input 
+            type="text" 
+            id="username" 
+            formControlName="username" 
+            placeholder="กรอกชื่อผู้ใช้งาน..."
+          />
+        </div>
+        <small class="error-text" *ngIf="loginForm.get('username')?.errors?.['required'] && loginForm.get('username')?.touched">
+          กรุณาระบุชื่อผู้ใช้งาน
+        </small>
+      </div>
+
+      <!-- ช่อง Password -->
+      <div class="form-group">
+        <label for="password">รหัสผ่าน (Password)</label>
+        <div class="input-wrapper" [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <span class="input-icon">🔒</span>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password" 
+            placeholder="กรอกรหัสผ่าน..."
+          />
+        </div>
+        <small class="error-text" *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched">
+          กรุณาระบุรหัสผ่าน
+        </small>
+      </div>
+
+      <!-- ปุ่มเข้าสู่ระบบพร้อมสถานะ Spinner หมุนโหลด -->
+      <button type="submit" class="btn-login" [disabled]="isLoading()">
+        <span class="spinner" *ngIf="isLoading()"></span>
+        <span class="btn-text">{{ isLoading() ? 'กำลังตรวจสอบสิทธิ์...' : 'เข้าสู่ระบบ' }}</span>
+      </button>
+
+    </form>
+  </div>
+</div>
