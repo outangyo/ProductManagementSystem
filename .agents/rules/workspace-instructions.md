@@ -82,5 +82,6 @@
   * [x] พัฒนาระบบ Product CRUD API (สร้าง `ProductsController.cs` พร้อมฟังก์ชันค้นหา, คัดกรอง และแบ่งหน้า Pagination) เรียบร้อย
   * [x] พัฒนาระบบแบ่งบทบาทความปลอดภัยหลังบ้าน (Role-based Authorization) โดยล็อกสิทธิ์การเขียน/ลบ (POST, PUT, DELETE) ให้เฉพาะ Admin และเปิดให้อ่านได้อย่างเดียว (GET) สำหรับ User เรียบร้อย
   * [x] พัฒนาระบบต่ออายุสิทธิ์หลักด้วยตั๋วสำรอง (Refresh Token) พร้อมกระบวนการหมุนเวียนคีย์ (Token Rotation) ในฝั่งหลังบ้านเรียบร้อย
-* **เป้าหมายสเต็ปถากไป:**
-  * [ ] พัฒนาหน้าบ้านฝั่ง Angular (Login, Auth Guard, Dashboard, CRUD)
+  * [x] พัฒนาหน้าบ้านฝั่ง Angular (Login, Auth Guard, Dashboard Layout, Categories CRUD, Products CRUD พร้อม Pagination & Search) เสร็จสิ้นเรียบร้อย
+* **เป้าหมายสเต็ปถัดไป:**
+  * [ ] เขียน Unit Test (xUnit) ฝั่งหลังบ้านครอบคลุม Service Layer

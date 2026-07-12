@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 export interface Category {
   id: number;
   name: string;
+  description?: string;
 }
 
 @Injectable({
@@ -25,12 +26,12 @@ export class CategoryService {
   }
 
   // เพิ่มหมวดหมู่ใหม่
-  createCategory(category: { name: string }): Observable<Category> {
+  createCategory(category: { name: string; description?: string }): Observable<Category> {
     return this.http.post<Category>(this.apiUrl, category);
   }
 
   // แก้ไขหมวดหมู่
-  updateCategory(id: number, category: { name: string }): Observable<void> {
+  updateCategory(id: number, category: { name: string; description?: string }): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, category);
   }
 

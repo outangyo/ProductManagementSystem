@@ -34,7 +34,8 @@ export class Categories implements OnInit {
 
   // ฟอร์มสำหรับเพิ่ม/แก้ไขหมวดหมู่
   protected readonly categoryForm = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.maxLength(100)]]
+    name: ['', [Validators.required, Validators.maxLength(100)]],
+    description: ['', [Validators.maxLength(500)]]
   });
 
   ngOnInit(): void {
@@ -64,7 +65,10 @@ export class Categories implements OnInit {
 
   openEditModal(category: Category): void {
     this.editingCategoryId.set(category.id);
-    this.categoryForm.patchValue({ name: category.name });
+    this.categoryForm.patchValue({
+      name: category.name,
+      description: category.description || ''
+    });
     this.isModalOpen.set(true);
   }
 
@@ -79,14 +83,14 @@ export class Categories implements OnInit {
       return;
     }
 
-    const name = this.categoryForm.getRawValue().name;
+    const formValues = this.categoryForm.getRawValue();
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
     const editId = this.editingCategoryId();
     if (editId !== null) {
       // โหมดแก้ไข (Update)
-      this.categoryService.updateCategory(editId, { name }).subscribe({
+      this.categoryService.updateCategory(editId, formValues).subscribe({
         next: () => {
           this.loadCategories();
           this.closeModal();
@@ -98,7 +102,7 @@ export class Categories implements OnInit {
       });
     } else {
       // โหมดเพิ่มใหม่ (Create)
-      this.categoryService.createCategory({ name }).subscribe({
+      this.categoryService.createCategory(formValues).subscribe({
         next: () => {
           this.loadCategories();
           this.closeModal();

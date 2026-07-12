@@ -37,6 +37,7 @@
         <tr>
           <th style="width: 100px;">ID</th>
           <th>Category Name</th>
+          <th>Description</th>
           <th *ngIf="isAdmin()" style="width: 180px; text-align: center;">Actions</th>
         </tr>
       </thead>
@@ -44,6 +45,7 @@
         <tr *ngFor="let cat of categories()">
           <td class="cat-id">#{{ cat.id }}</td>
           <td class="cat-name">{{ cat.name }}</td>
+          <td class="cat-desc">{{ cat.description || '-' }}</td>
           <td *ngIf="isAdmin()" class="table-actions">
             <button (click)="openEditModal(cat)" class="btn-action btn-edit" title="Edit">
               📝 Edit
@@ -82,6 +84,21 @@
             </small>
             <small class="error-text" *ngIf="categoryForm.get('name')?.errors?.['maxlength'] && categoryForm.get('name')?.touched">
               Category name cannot exceed 100 characters.
+            </small>
+          </div>
+
+          <div class="form-group" style="margin-top: 16px;">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              formControlName="description" 
+              placeholder="Enter category description..."
+              class="form-control"
+              rows="3"
+              [class.is-invalid]="categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched"
+            ></textarea>
+            <small class="error-text" *ngIf="categoryForm.get('description')?.errors?.['maxlength'] && categoryForm.get('description')?.touched">
+              Description cannot exceed 500 characters.
             </small>
           </div>
         </div>

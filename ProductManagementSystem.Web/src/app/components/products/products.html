@@ -1,0 +1,257 @@
+<div class="products-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-title">
+      <h1>Products</h1>
+      <p>Manage store inventory and product prices</p>
+    </div>
+    <!-- Add button (Admins only) -->
+    <button *ngIf="isAdmin()" (click)="openAddModal()" class="btn-primary">
+      <span class="btn-icon">+</span>
+      <span>Add Product</span>
+    </button>
+  </div>
+
+  <!-- Search and Filtering Toolbar -->
+  <div class="toolbar">
+    <form (submit)="onSearch($event)" class="search-form">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          placeholder="Search products by name..." 
+          [value]="searchQuery()" 
+          (input)="searchQuery.set($any($event.target).value)"
+        />
+      </div>
+      <button type="submit" class="btn-secondary">Search</button>
+    </form>
+  </div>
+
+  <!-- Global Error Banner -->
+  <div class="alert alert-danger" *ngIf="errorMessage()">
+    <span class="alert-icon">⚠️</span>
+    <span class="alert-text">{{ errorMessage() }}</span>
+  </div>
+
+  <!-- Products Table Card -->
+  <div class="card table-card">
+    <div class="card-loading-overlay" *ngIf="isLoading()">
+      <span class="spinner"></span>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="products().length === 0 && !isLoading()">
+      <span class="empty-icon">🛍️</span>
+      <h3>No products found</h3>
+      <p>Try searching for another name or create a product.</p>
+    </div>
+
+    <!-- Table -->
+    <table class="data-table" *ngIf="products().length > 0">
+      <thead>
+        <tr>
+          <th style="width: 80px;">ID</th>
+          <th style="width: 80px;">Image</th>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th style="width: 140px;">Price</th>
+          <th style="width: 140px;">Stock</th>
+          <th *ngIf="isAdmin()" style="width: 180px; text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prod of products()">
+          <td class="prod-id">#{{ prod.id }}</td>
+          <td class="prod-img-col">
+            <div class="prod-avatar">
+              <img *ngIf="prod.imageUrl" [src]="prod.imageUrl" alt="Product Image" (error)="prod.imageUrl = ''"/>
+              <span *ngIf="!prod.imageUrl">📦</span>
+            </div>
+          </td>
+          <td class="prod-name-col">
+            <span class="prod-name">{{ prod.name }}</span>
+          </td>
+          <td>
+            <span class="category-badge">{{ prod.categoryName || 'Unassigned' }}</span>
+          </td>
+          <td class="prod-price">${{ prod.price | number:'1.2-2' }}</td>
+          <td>
+            <!-- Stock Badges depending on levels -->
+            <span class="stock-badge badge-out" *ngIf="prod.stock === 0">Out of Stock</span>
+            <span class="stock-badge badge-low" *ngIf="prod.stock > 0 && prod.stock < 10">Low ({{ prod.stock }})</span>
+            <span class="stock-badge badge-in" *ngIf="prod.stock >= 10">{{ prod.stock }} units</span>
+          </td>
+          <td *ngIf="isAdmin()" class="table-actions">
+            <button (click)="openEditModal(prod)" class="btn-action btn-edit" title="Edit">
+              📝 Edit
+            </button>
+            <button (click)="confirmDelete(prod.id)" class="btn-action btn-delete" title="Delete">
+              🗑️ Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination Footer -->
+    <div class="table-footer" *ngIf="products().length > 0 && !isLoading()">
+      <div class="footer-info">
+        Showing Page {{ currentPage() }} of {{ totalPages() }} ({{ totalCount() }} total items)
+      </div>
+      <div class="pagination-controls">
+        <button 
+          (click)="changePage(currentPage() - 1)" 
+          [disabled]="currentPage() === 1" 
+          class="btn-page"
+        >
+          Previous
+        </button>
+        <button 
+          (click)="changePage(currentPage() + 1)" 
+          [disabled]="currentPage() === totalPages()" 
+          class="btn-page"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-backdrop" *ngIf="isModalOpen()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>{{ editingProductId() !== null ? 'Edit Product' : 'Add Product' }}</h2>
+        <button (click)="closeModal()" class="btn-close-modal">&times;</button>
+      </div>
+      
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" autocomplete="off">
+        <div class="modal-body scrollable-body">
+          
+          <!-- Product Name -->
+          <div class="form-group">
+            <label for="name">Product Name</label>
+            <input 
+              type="text" 
+              id="name" 
+              formControlName="name" 
+              placeholder="e.g. Wireless Mouse, Bluetooth Keyboard..."
+              class="form-control"
+              [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+            />
+            <small class="error-text" *ngIf="productForm.get('name')?.errors?.['required'] && productForm.get('name')?.touched">
+              Product name is required.
+            </small>
+            <small class="error-text" *ngIf="productForm.get('name')?.errors?.['maxlength'] && productForm.get('name')?.touched">
+              Product name cannot exceed 200 characters.
+            </small>
+          </div>
+
+          <div class="form-row">
+            <!-- Price -->
+            <div class="form-group flex-1">
+              <label for="price">Price ($)</label>
+              <input 
+                type="number" 
+                id="price" 
+                formControlName="price" 
+                placeholder="0.00"
+                step="0.01"
+                class="form-control"
+                [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+              />
+              <small class="error-text" *ngIf="productForm.get('price')?.errors?.['required'] && productForm.get('price')?.touched">
+                Price is required.
+              </small>
+              <small class="error-text" *ngIf="productForm.get('price')?.errors?.['min'] && productForm.get('price')?.touched">
+                Price must be greater than $0.00.
+              </small>
+            </div>
+
+            <!-- Stock -->
+            <div class="form-group flex-1">
+              <label for="stock">Stock Quantity</label>
+              <input 
+                type="number" 
+                id="stock" 
+                formControlName="stock" 
+                placeholder="0"
+                class="form-control"
+                [class.is-invalid]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched"
+              />
+              <small class="error-text" *ngIf="productForm.get('stock')?.errors?.['required'] && productForm.get('stock')?.touched">
+                Stock is required.
+              </small>
+              <small class="error-text" *ngIf="productForm.get('stock')?.errors?.['min'] && productForm.get('stock')?.touched">
+                Stock cannot be less than 0.
+              </small>
+            </div>
+          </div>
+
+          <!-- Category Selection -->
+          <div class="form-group">
+            <label for="categoryId">Category</label>
+            <select 
+              id="categoryId" 
+              formControlName="categoryId"
+              class="form-control"
+              [class.is-invalid]="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched"
+            >
+              <option [value]="null" disabled selected>-- Select Category --</option>
+              <option *ngFor="let cat of categories()" [value]="cat.id">
+                {{ cat.name }}
+              </option>
+            </select>
+            <small class="error-text" *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
+              Category is required.
+            </small>
+          </div>
+
+          <!-- Product Image URL -->
+          <div class="form-group">
+            <label for="imageUrl">Product Image URL (Optional)</label>
+            <input 
+              type="text" 
+              id="imageUrl" 
+              formControlName="imageUrl" 
+              placeholder="e.g. https://example.com/image.jpg..."
+              class="form-control"
+              [class.is-invalid]="productForm.get('imageUrl')?.invalid && productForm.get('imageUrl')?.touched"
+            />
+            <small class="error-text" *ngIf="productForm.get('imageUrl')?.errors?.['maxlength'] && productForm.get('imageUrl')?.touched">
+              Image URL cannot exceed 500 characters.
+            </small>
+          </div>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" (click)="closeModal()" class="btn-secondary" [disabled]="isLoading()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="isLoading() || productForm.invalid">
+            {{ isLoading() ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom Delete Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="isDeleteConfirmOpen()">
+    <div class="modal-card modal-confirm">
+      <div class="modal-header">
+        <h2>Confirm Delete</h2>
+        <button (click)="closeDeleteConfirm()" class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this product? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="closeDeleteConfirm()" class="btn-secondary" [disabled]="isLoading()">Cancel</button>
+        <button type="button" (click)="executeDelete()" class="btn-danger" [disabled]="isLoading()">
+          {{ isLoading() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
