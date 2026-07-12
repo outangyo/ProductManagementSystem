@@ -45,7 +45,7 @@ public class CategoriesController : ControllerBase
         
         if (category == null)
         {
-            return NotFound(new { message = "ไม่พบหมวดหมู่สินค้าที่ระบุ" });
+            return NotFound(new { message = "Category not found." });
         }
 
         var categoryDto = new CategoryDto
@@ -66,7 +66,7 @@ public class CategoriesController : ControllerBase
         // 1. ตรวจสอบความปลอดภัยระดับข้อมูล: ตรวจชื่อซ้ำในระบบ (แบบ Case-Insensitive)
         if (await _context.Categories.AnyAsync(c => c.Name.ToLower() == dto.Name.ToLower()))
         {
-            return BadRequest(new { message = "ชื่อหมวดหมู่นี้มีอยู่ในระบบแล้ว" });
+            return BadRequest(new { message = "Category name already exists." });
         }
 
         // 2. Map ข้อมูลจาก DTO แปลงเป็น Entity เพื่อเซฟลงฐานข้อมูล
@@ -100,13 +100,13 @@ public class CategoriesController : ControllerBase
         var category = await _context.Categories.FindAsync(id);
         if (category == null)
         {
-            return NotFound(new { message = "ไม่พบหมวดหมู่สินค้าที่ต้องการแก้ไข" });
+            return NotFound(new { message = "Category to update not found." });
         }
 
         // 2. ตรวจสอบชื่อซ้ำ: ชื่อใหม่ต้องไม่ไปซ้ำกับของหมวดหมู่อื่น (แต่ใช้ชื่อเดิมของตัวเองได้)
         if (await _context.Categories.AnyAsync(c => c.Name.ToLower() == dto.Name.ToLower() && c.Id != id))
         {
-            return BadRequest(new { message = "ชื่อหมวดหมู่นี้มีอยู่ในระบบแล้ว" });
+            return BadRequest(new { message = "Category name already exists." });
         }
 
         // 3. ปรับปรุงค่าฟิลด์ต่าง ๆ ของ Entity
@@ -129,7 +129,7 @@ public class CategoriesController : ControllerBase
         var category = await _context.Categories.FindAsync(id);
         if (category == null)
         {
-            return NotFound(new { message = "ไม่พบหมวดหมู่สินค้าที่ต้องการลบ" });
+            return NotFound(new { message = "Category to delete not found." });
         }
 
         try
@@ -143,7 +143,7 @@ public class CategoriesController : ControllerBase
         {
             // 3. ป้องกันบักระดับ DB: กรณีหมวดหมู่นั้นยังมีสินค้าผูกไว้อยู่ (ผลลัพธ์จาก OnDelete Restrict ที่เราตั้งค่าไว้)
             // จะส่งสถานะ 400 Bad Request พร้อมข้อความเตือนเพื่อให้หน้าบ้านแสดง Dialog แจ้งเตือนผู้ใช้ได้อย่างถูกต้อง
-            return BadRequest(new { message = "ไม่สามารถลบหมวดหมู่นี้ได้ เนื่องจากยังมีรายการสินค้าผูกอยู่กับหมวดหมู่นี้" });
+            return BadRequest(new { message = "Cannot delete this category because there are active products linked to it." });
         }
     }
 }

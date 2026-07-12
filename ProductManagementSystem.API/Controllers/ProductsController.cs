@@ -83,7 +83,7 @@ public class ProductsController : ControllerBase
         if (product == null)
         {
             // ส่ง HTTP 404 NotFound
-            return NotFound(new { message = "ไม่พบรายการสินค้าที่ระบุ" });
+            return NotFound(new { message = "Product not found." });
         }
 
         // 3. แปลงข้อมูลดิบ Entity เป็น DTO เพื่อส่งให้กับ Angular
@@ -111,7 +111,7 @@ public class ProductsController : ControllerBase
         var categoryExists = await _context.Categories.AnyAsync(c => c.Id == dto.CategoryId);
         if (!categoryExists)
         {
-            return BadRequest(new { message = "หมวดหมู่สินค้าที่ระบุไม่ถูกต้องหรือไม่มีอยู่จริง" });
+            return BadRequest(new { message = "The specified category is invalid or does not exist." });
         }
 
         // 2. แปลง DTO เป็น Entity และสั่งบันทึกเข้าฐานข้อมูล
@@ -158,14 +158,14 @@ public class ProductsController : ControllerBase
         var product = await _context.Products.FindAsync(id);
         if (product == null)
         {
-            return NotFound(new { message = "ไม่พบรายการสินค้าที่ต้องการแก้ไข" });
+            return NotFound(new { message = "Product to update not found." });
         }
 
         // 2. ตรวจสอบความถูกต้องระดับความสัมพันธ์ (Foreign Key): ตรวจว่ามีหมวดหมู่ ID ใหม่นี้ในระบบจริงไหม
         var categoryExists = await _context.Categories.AnyAsync(c => c.Id == dto.CategoryId);
         if (!categoryExists)
         {
-            return BadRequest(new { message = "หมวดหมู่สินค้าที่ระบุไม่ถูกต้องหรือไม่มีอยู่จริง" });
+            return BadRequest(new { message = "The specified category is invalid or does not exist." });
         }
 
         // 3. ปรับปรุงค่าฟิลด์ต่าง ๆ ของ Entity
@@ -192,7 +192,7 @@ public class ProductsController : ControllerBase
         var product = await _context.Products.FindAsync(id);
         if (product == null)
         {
-            return NotFound(new { message = "ไม่พบรายการสินค้าที่ต้องการลบ" });
+            return NotFound(new { message = "Product to delete not found." });
         }
 
         // 2. ลบข้อมูลสินค้าออกจากฐานข้อมูล

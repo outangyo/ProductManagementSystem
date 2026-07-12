@@ -4,9 +4,9 @@ namespace ProductManagementSystem.API.DTOs;
 
 public class LoginDto
 {
-    [Required(ErrorMessage = "กรุณากรอก Username")]
+    [Required(ErrorMessage = "Username is required.")]
     public string Username { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "กรุณากรอก Password")]
+    [Required(ErrorMessage = "Password is required.")]
     public string Password { get; set; } = string.Empty;
 }

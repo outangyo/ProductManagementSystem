@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
         if (user == null || !PasswordHelper.VerifyPassword(loginDto.Password, user.PasswordHash))
         {
             // ส่งข้อความปฏิเสธการเข้าถึงกลับไปแบบทั่วไปเพื่อความปลอดภัย (Generic Error Message)
-            return Unauthorized(new { message = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
+            return Unauthorized(new { message = "Invalid username or password." });
         }
 
         // 3. เมื่อรหัสผ่านถูกต้อง ให้สั่งปั๊มตั๋ว Token และ Refresh Token ออกมา
@@ -59,7 +59,7 @@ public class AuthController : ControllerBase
     {
         if (tokenRequestDto == null)
         {
-            return BadRequest(new { message = "ข้อมูลคำขอไม่ถูกต้อง" });
+            return BadRequest(new { message = "Invalid client request." });
         }
 
         string accessToken = tokenRequestDto.AccessToken;
@@ -73,7 +73,7 @@ public class AuthController : ControllerBase
 
             if (string.IsNullOrEmpty(username))
             {
-                return BadRequest(new { message = "ตั๋วหลักไม่มีข้อมูลผู้ใช้" });
+                return BadRequest(new { message = "Invalid token payload." });
             }
 
             // 2. ค้นหาผู้ใช้งานจากฐานข้อมูล
@@ -85,7 +85,7 @@ public class AuthController : ControllerBase
             // - Refresh Token ใน DB หมดอายุหรือยัง
             if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
             {
-                return BadRequest(new { message = "การเข้าสู่ระบบหมดอายุ หรือ Token ไม่ถูกต้อง กรุณาล็อกอินใหม่" });
+                return BadRequest(new { message = "Session expired or invalid token. Please log in again." });
             }
 
             // 4. สั่งปั๊ม Access Token ใบใหม่
@@ -110,7 +110,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception)
         {
-            return BadRequest(new { message = "เกิดข้อผิดพลาดในการตรวจสอบสิทธิ์ กรุณาล็อกอินใหม่" });
+            return BadRequest(new { message = "Authentication error occurred. Please log in again." });
         }
     }
 }

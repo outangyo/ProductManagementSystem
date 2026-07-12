@@ -4,24 +4,24 @@ namespace ProductManagementSystem.API.DTOs;
 
 public class CreateProductDto
 {
-    [Required(ErrorMessage = "กรุณากรอกชื่อสินค้า")]
-    [StringLength(150, ErrorMessage = "ชื่อสินค้าต้องมีความยาวไม่เกิน 150 ตัวอักษร")]
+    [Required(ErrorMessage = "Product name is required.")]
+    [StringLength(150, ErrorMessage = "Product name cannot exceed 150 characters.")]
     public string Name { get; set; } = string.Empty;
 
-    [StringLength(1000, ErrorMessage = "รายละเอียดต้องมีความยาวไม่เกิน 1000 ตัวอักษร")]
+    [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters.")]
     public string? Description { get; set; }
 
-    [Required(ErrorMessage = "กรุณากรอกราคาสินค้า")]
-    [Range(0.01, double.MaxValue, ErrorMessage = "ราคาสินค้าต้องมากกว่า 0")]
+    [Required(ErrorMessage = "Price is required.")]
+    [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
     public decimal Price { get; set; }
 
-    [Required(ErrorMessage = "กรุณากรอกจำนวนสินค้าในสต็อก")]
-    [Range(0, int.MaxValue, ErrorMessage = "จำนวนสินค้าในสต็อกต้องไม่ต่ำกว่า 0")]
+    [Required(ErrorMessage = "Stock quantity is required.")]
+    [Range(0, int.MaxValue, ErrorMessage = "Stock quantity cannot be less than 0.")]
     public int Stock { get; set; }
 
-    [Required(ErrorMessage = "กรุณาระบุหมวดหมู่สินค้า")]
+    [Required(ErrorMessage = "Category ID is required.")]
     public int CategoryId { get; set; }
 
-    [StringLength(500, ErrorMessage = "URL รูปภาพต้องมีความยาวไม่เกิน 500 ตัวอักษร")]
+    [StringLength(500, ErrorMessage = "Image URL cannot exceed 500 characters.")]
     public string? ImageUrl { get; set; }
 }
