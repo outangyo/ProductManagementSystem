@@ -16,4 +16,13 @@ public class User
 
     [MaxLength(100)]
     public string? FullName { get; set; }
+
+    [Required]
+    [MaxLength(20)]
+    public string Role { get; set; } = "User";
+
+    [MaxLength(255)]
+    public string? RefreshToken { get; set; }
+
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 }

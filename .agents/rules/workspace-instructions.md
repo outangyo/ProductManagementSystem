@@ -55,9 +55,9 @@
 * README บอกวิธี setup และ run โครงการ (ต้องการอะไรบ้าง, กี่ command)
 * DB migration หรือ seed script
 
-## 4. Optional (เดียวถ้าผมจะทำจะมีการบอกอีกที)
+## 4. Advance Requirement
 * Unit test ฝั่ง backend (xUnit / NUnit) อย่างน้อย service layer
-* Upload รูปสินค้า
+* Upload รูปสินค้า (Optional for now)
 * Dockerize ทั้ง backend และ frontend
 * Refresh token mechanism
 * Role-based authorization (เช่น Admin ลบได้ แต่ User ดูได้อย่างเดียว)

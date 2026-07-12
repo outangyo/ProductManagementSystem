@@ -21,6 +21,9 @@ public class Product
     [Required]
     public int Stock { get; set; }
 
+    [MaxLength(500)]
+    public string? ImageUrl { get; set; }
+
     [Required]
     public int CategoryId { get; set; }
 

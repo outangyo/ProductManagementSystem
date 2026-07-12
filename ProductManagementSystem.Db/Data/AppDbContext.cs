@@ -51,14 +51,16 @@ public class AppDbContext : DbContext
                 Id = 1,
                 Username = "admin",
                 PasswordHash = adminPasswordHash,
-                FullName = "System Administrator"
+                FullName = "System Administrator",
+                Role = "Admin"
             },
             new User
             {
                 Id = 2,
                 Username = "user",
                 PasswordHash = userPasswordHash,
-                FullName = "Standard User"
+                FullName = "Standard User",
+                Role = "User"
             }
         );
 
