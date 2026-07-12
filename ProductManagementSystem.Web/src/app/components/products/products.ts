@@ -37,10 +37,12 @@ export class Products implements OnInit {
   // ควบคุมฟรอนต์เอนด์ Modals
   protected readonly isModalOpen = signal(false);
   protected readonly isDeleteConfirmOpen = signal(false);
+  protected readonly isDetailsOpen = signal(false);
 
   // บันทึกการกระทำเป้าหมาย
   protected readonly editingProductId = signal<number | null>(null);
   protected readonly deletingProductId = signal<number | null>(null);
+  protected readonly selectedProduct = signal<Product | null>(null);
 
   // ฟอร์มข้อมูลสินค้าพร้อม Validation เงื่อนไขราคา > 0 และสต็อก >= 0
   protected readonly productForm = this.fb.nonNullable.group({
@@ -127,6 +129,16 @@ export class Products implements OnInit {
   closeModal(): void {
     this.isModalOpen.set(false);
     this.productForm.reset();
+  }
+
+  openDetailsModal(product: Product): void {
+    this.selectedProduct.set(product);
+    this.isDetailsOpen.set(true);
+  }
+
+  closeDetailsModal(): void {
+    this.isDetailsOpen.set(false);
+    this.selectedProduct.set(null);
   }
 
   onSubmit(): void {

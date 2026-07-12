@@ -156,7 +156,7 @@ $text-muted: #94a3b8;
 
   th {
     background-color: rgba(255, 255, 255, 0.02);
-    padding: 16px 24px;
+    padding: 12px 18px;
     font-weight: 600;
     font-size: 0.85rem;
     color: #cbd5e1;
@@ -166,7 +166,7 @@ $text-muted: #94a3b8;
   }
 
   td {
-    padding: 16px 24px;
+    padding: 12px 18px;
     border-bottom: 1px solid $border-color;
     font-size: 0.95rem;
     color: $text-light;
@@ -304,6 +304,17 @@ $text-muted: #94a3b8;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+
+  &.btn-view {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #a7f3d0;
+    border: 1px solid rgba(16, 185, 129, 0.15);
+
+    &:hover {
+      background-color: #10b981;
+      color: white;
+    }
+  }
 
   &.btn-edit {
     background-color: rgba(59, 130, 246, 0.1);
@@ -457,4 +468,116 @@ $text-muted: #94a3b8;
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+// Details Modal specific styling
+.modal-details {
+  max-width: 680px; // Wider for side-by-side layout
+}
+
+.details-layout {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.details-image-wrapper {
+  width: 200px;
+  height: 200px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid $border-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .details-no-image {
+    font-size: 4.5rem;
+    opacity: 0.35;
+  }
+}
+
+.details-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.details-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-light;
+  margin: 0;
+}
+
+.details-meta-row {
+  display: flex;
+  gap: 24px;
+  border-top: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
+  padding: 14px 0;
+}
+
+.details-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .meta-label {
+    font-size: 0.775rem;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .meta-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $text-light;
+
+    &.price-value {
+      color: #60a5fa;
+      font-size: 1.1rem;
+      font-family: monospace;
+    }
+  }
+}
+
+.details-description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    font-size: 0.925rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap; // Preserve newlines!
+  }
 }

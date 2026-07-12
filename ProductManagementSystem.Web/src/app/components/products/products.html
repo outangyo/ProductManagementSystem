@@ -51,14 +51,14 @@
     <table class="data-table" *ngIf="products().length > 0">
       <thead>
         <tr>
-          <th style="width: 60px; text-align: center;">#</th>
+          <th style="width: 60px; text-align: center;">Order</th>
           <th style="width: 80px;">ID</th>
           <th style="width: 80px;">Image</th>
           <th>Product Name</th>
           <th>Category</th>
           <th style="width: 140px;">Price</th>
           <th style="width: 140px;">Stock</th>
-          <th *ngIf="isAdmin()" style="width: 180px; text-align: center;">Actions</th>
+          <th style="width: 240px; text-align: center;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -79,18 +79,21 @@
           <td>
             <span class="category-badge">{{ prod.categoryName || 'Unassigned' }}</span>
           </td>
-          <td class="prod-price">${{ prod.price | number:'1.2-2' }}</td>
+          <td class="prod-price">฿{{ prod.price | number:'1.2-2' }}</td>
           <td>
             <!-- Stock Badges depending on levels -->
             <span class="stock-badge badge-out" *ngIf="prod.stock === 0">Out of Stock</span>
             <span class="stock-badge badge-low" *ngIf="prod.stock > 0 && prod.stock < 10">Low ({{ prod.stock }})</span>
             <span class="stock-badge badge-in" *ngIf="prod.stock >= 10">{{ prod.stock }} units</span>
           </td>
-          <td *ngIf="isAdmin()" class="table-actions">
-            <button (click)="openEditModal(prod)" class="btn-action btn-edit" title="Edit">
+          <td class="table-actions">
+            <button (click)="openDetailsModal(prod)" class="btn-action btn-view" title="View Details">
+              👁️ View
+            </button>
+            <button *ngIf="isAdmin()" (click)="openEditModal(prod)" class="btn-action btn-edit" title="Edit">
               📝 Edit
             </button>
-            <button (click)="confirmDelete(prod.id)" class="btn-action btn-delete" title="Delete">
+            <button *ngIf="isAdmin()" (click)="confirmDelete(prod.id)" class="btn-action btn-delete" title="Delete">
               🗑️ Delete
             </button>
           </td>
@@ -171,7 +174,7 @@
           <div class="form-row">
             <!-- Price -->
             <div class="form-group flex-1">
-              <label for="price">Price ($)</label>
+              <label for="price">Price (฿)</label>
               <input 
                 type="number" 
                 id="price" 
@@ -185,7 +188,7 @@
                 Price is required.
               </small>
               <small class="error-text" *ngIf="productForm.get('price')?.errors?.['min'] && productForm.get('price')?.touched">
-                Price must be greater than $0.00.
+                Price must be greater than ฿0.00.
               </small>
             </div>
 
@@ -271,6 +274,53 @@
         <button type="button" (click)="executeDelete()" class="btn-danger" [disabled]="isLoading()">
           {{ isLoading() ? 'Deleting...' : 'Delete' }}
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Details Modal -->
+  <div class="modal-backdrop" *ngIf="isDetailsOpen() && selectedProduct()">
+    <div class="modal-card modal-details">
+      <div class="modal-header">
+        <h2>Product Details</h2>
+        <button (click)="closeDetailsModal()" class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body scrollable-body">
+        <div class="details-layout">
+          <!-- Left Column: Image -->
+          <div class="details-image-wrapper">
+            <img *ngIf="selectedProduct()?.imageUrl" [src]="selectedProduct()?.imageUrl" alt="Product Image" (error)="$any($event.target).style.display = 'none'" />
+            <span class="details-no-image">📦</span>
+          </div>
+          <!-- Right Column: Info -->
+          <div class="details-info">
+            <span class="category-badge">{{ selectedProduct()?.categoryName || 'Unassigned' }}</span>
+            <h1 class="details-title">{{ selectedProduct()?.name }}</h1>
+            
+            <div class="details-meta-row">
+              <div class="details-meta-item">
+                <span class="meta-label">Price</span>
+                <span class="meta-value price-value">฿{{ selectedProduct()?.price | number:'1.2-2' }}</span>
+              </div>
+              <div class="details-meta-item">
+                <span class="meta-label">Stock Status</span>
+                <div class="meta-value">
+                  <span class="stock-badge badge-out" *ngIf="selectedProduct()?.stock === 0">Out of Stock</span>
+                  <span class="stock-badge badge-low" *ngIf="selectedProduct()?.stock! > 0 && selectedProduct()?.stock! < 10">Low ({{ selectedProduct()?.stock }})</span>
+                  <span class="stock-badge badge-in" *ngIf="selectedProduct()?.stock! >= 10">{{ selectedProduct()?.stock }} units</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="details-description">
+              <h3>Description</h3>
+              <p>{{ selectedProduct()?.description || 'No description available for this product.' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="closeDetailsModal()" class="btn-secondary">Close</button>
       </div>
     </div>
   </div>
