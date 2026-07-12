@@ -70,9 +70,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
+
+// เปิดใช้งาน Swagger เสมอสำหรับขั้นตอนการพัฒนาและเทสระบบ
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
