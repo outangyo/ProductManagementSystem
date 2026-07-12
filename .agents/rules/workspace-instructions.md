@@ -60,7 +60,7 @@
 * Upload รูปสินค้า (Optional for now)
 * Dockerize ทั้ง backend และ frontend
 * Refresh token mechanism
-* Role-based authorization (เช่น Admin ลบได้ แต่ User ดูได้อย่างเดียว)
+* [x] Role-based authorization (เช่น Admin ลบได้ แต่ User ดูได้อย่างเดียว) [หลังบ้านเสร็จสิ้น]
 
 ## 5. กติกาและแนวทางการพัฒนา (Development Rules)
 * **การใช้สิทธิ์และการรันคำสั่ง (Permission & Command Execution):** AI ควรวางแผนการรันคำสั่งต่าง ๆ หรือการแก้ไขไฟล์โดยการรวบรวมทำพร้อมกันเป็นรอบ ๆ (Batching/Group operations) เพื่อลดภาระและไม่ให้ผู้พัฒนา (Developer) ต้องคอยกดยืนยัน (Approve/Enter) บ่อย ๆ ในระบบความปลอดภัยของ Antigravity
@@ -80,5 +80,6 @@
   * [x] สร้าง DTOs สำหรับ Category และ Product พร้อมระบบ Validation (ราคา > 0, สต็อก >= 0) เรียบร้อย
   * [x] สร้าง `CategoriesController.cs` สำหรับจัดการหมวดหมู่สินค้า (CRUD 5 endpoints) พร้อมความปลอดภัย JWT และระบบดักตรวจข้อผิดพลาดเมื่อลบหมวดหมู่ที่มีสินค้าผูกอยู่เรียบร้อย
   * [x] พัฒนาระบบ Product CRUD API (สร้าง `ProductsController.cs` พร้อมฟังก์ชันค้นหา, คัดกรอง และแบ่งหน้า Pagination) เรียบร้อย
+  * [x] พัฒนาระบบแบ่งบทบาทความปลอดภัยหลังบ้าน (Role-based Authorization) โดยล็อกสิทธิ์การเขียน/ลบ (POST, PUT, DELETE) ให้เฉพาะ Admin และเปิดให้อ่านได้อย่างเดียว (GET) สำหรับ User เรียบร้อย
 * **เป้าหมายสเต็ปถัดไป:**
   * [ ] พัฒนาหน้าบ้านฝั่ง Angular (Login, Auth Guard, Dashboard, CRUD)

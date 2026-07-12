@@ -59,6 +59,7 @@ public class CategoriesController : ControllerBase
     }
 
     // POST: /api/categories (เพิ่มหมวดหมู่ใหม่)
+    [Authorize(Roles = "Admin")] // ยอมรับเฉพาะ Admin
     [HttpPost]
     public async Task<ActionResult<CategoryDto>> CreateCategory([FromBody] CreateCategoryDto dto)
     {
@@ -91,6 +92,7 @@ public class CategoriesController : ControllerBase
     }
 
     // PUT: /api/categories/{id} (แก้ไขหมวดหมู่สินค้า)
+    [Authorize(Roles = "Admin")] // ยอมรับเฉพาะ Admin
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCategory(int id, [FromBody] CreateCategoryDto dto)
     {
@@ -119,6 +121,7 @@ public class CategoriesController : ControllerBase
     }
 
     // DELETE: /api/categories/{id} (ลบหมวดหมู่สินค้า)
+    [Authorize(Roles = "Admin")] // ยอมรับเฉพาะ Admin
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {

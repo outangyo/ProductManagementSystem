@@ -101,6 +101,7 @@ public class ProductsController : ControllerBase
     }
 
     // POST: /api/products (เพิ่มสินค้าใหม่)
+    [Authorize(Roles = "Admin")] // ยอมรับเฉพาะ Admin
     [HttpPost]
     public async Task<ActionResult<ProductDto>> CreateProduct([FromBody] CreateProductDto dto)
     {
@@ -145,6 +146,7 @@ public class ProductsController : ControllerBase
     }
 
     // PUT: /api/products/{id} (แก้ไขข้อมูลสินค้า)
+    [Authorize(Roles = "Admin")] // ยอมรับเฉพาะ Admin
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProduct(int id, [FromBody] CreateProductDto dto)
     {
@@ -177,6 +179,7 @@ public class ProductsController : ControllerBase
     }
 
     // DELETE: /api/products/{id} (ลบสินค้า)
+    [Authorize(Roles = "Admin")] // ยอมรับเฉพาะ Admin
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(int id)
     {

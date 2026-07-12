@@ -29,7 +29,8 @@ public class TokenService : ITokenService
         {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim("FullName", user.FullName ?? string.Empty)
+            new Claim("FullName", user.FullName ?? string.Empty),
+            new Claim(ClaimTypes.Role, user.Role) // แนบสิทธิ์การใช้งาน (Admin/User) ลงใน Claim
         };
 
         // 4. ประกอบร่างตั๋ว JWT (ตั้งเวลาหมดอายุ, ระบุผู้ออกตั๋ว, ผู้รับตั๋ว, และเซ็นชื่อกำกับ)
