@@ -51,7 +51,8 @@ public class ProductsController : ControllerBase
                 Price = p.Price,
                 Stock = p.Stock,
                 CategoryId = p.CategoryId,
-                CategoryName = p.Category.Name
+                CategoryName = p.Category.Name,
+                ImageUrl = p.ImageUrl
             })
             .ToListAsync();
 
@@ -94,7 +95,8 @@ public class ProductsController : ControllerBase
             Price = product.Price,
             Stock = product.Stock,
             CategoryId = product.CategoryId,
-            CategoryName = product.Category.Name
+            CategoryName = product.Category.Name,
+            ImageUrl = product.ImageUrl
         };
 
         return Ok(productDto);
@@ -119,7 +121,8 @@ public class ProductsController : ControllerBase
             Description = dto.Description,
             Price = dto.Price,
             Stock = dto.Stock,
-            CategoryId = dto.CategoryId
+            CategoryId = dto.CategoryId,
+            ImageUrl = dto.ImageUrl
         };
 
         _context.Products.Add(product);
@@ -138,7 +141,8 @@ public class ProductsController : ControllerBase
             Price = product.Price,
             Stock = product.Stock,
             CategoryId = product.CategoryId,
-            CategoryName = categoryName
+            CategoryName = categoryName,
+            ImageUrl = product.ImageUrl
         };
 
         // 5. ส่งสถานะ 201 Created กลับไป พร้อมชี้ปลายทาง Location ไปที่ปุ่มดูรายละเอียด (GetProduct)
@@ -170,6 +174,7 @@ public class ProductsController : ControllerBase
         product.Price = dto.Price;
         product.Stock = dto.Stock;
         product.CategoryId = dto.CategoryId;
+        product.ImageUrl = dto.ImageUrl;
 
         // 4. บันทึกผลการเปลี่ยนแปลงลงฐานข้อมูล
         await _context.SaveChangesAsync();

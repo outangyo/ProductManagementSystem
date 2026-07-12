@@ -21,4 +21,7 @@ public class CreateProductDto
 
     [Required(ErrorMessage = "กรุณาระบุหมวดหมู่สินค้า")]
     public int CategoryId { get; set; }
+
+    [StringLength(500, ErrorMessage = "URL รูปภาพต้องมีความยาวไม่เกิน 500 ตัวอักษร")]
+    public string? ImageUrl { get; set; }
 }

@@ -51,6 +51,7 @@
     <table class="data-table" *ngIf="products().length > 0">
       <thead>
         <tr>
+          <th style="width: 60px; text-align: center;">#</th>
           <th style="width: 80px;">ID</th>
           <th style="width: 80px;">Image</th>
           <th>Product Name</th>
@@ -61,7 +62,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let prod of products()">
+        <tr *ngFor="let prod of products(); let i = index">
+          <td style="text-align: center; color: #94a3b8; font-weight: 600;">
+            {{ (currentPage() - 1) * pageSize() + i + 1 }}
+          </td>
           <td class="prod-id">#{{ prod.id }}</td>
           <td class="prod-img-col">
             <div class="prod-avatar">
@@ -145,6 +149,22 @@
             </small>
             <small class="error-text" *ngIf="productForm.get('name')?.errors?.['maxlength'] && productForm.get('name')?.touched">
               Product name cannot exceed 200 characters.
+            </small>
+          </div>
+
+          <!-- Product Description -->
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              formControlName="description" 
+              placeholder="Enter product description details..."
+              class="form-control"
+              rows="3"
+              [class.is-invalid]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
+            ></textarea>
+            <small class="error-text" *ngIf="productForm.get('description')?.errors?.['maxlength'] && productForm.get('description')?.touched">
+              Description cannot exceed 1000 characters.
             </small>
           </div>
 

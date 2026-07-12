@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 export interface Product {
   id: number;
   name: string;
+  description?: string;
   price: number;
   stock: number;
   imageUrl?: string;
@@ -14,9 +15,9 @@ export interface Product {
 
 export interface PaginatedProducts {
   items: Product[];
-  page: number;
-  limit: number;
-  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
   totalPages: number;
 }
 
@@ -28,10 +29,10 @@ export class ProductService {
   private readonly apiUrl = 'https://localhost:7133/api/products';
 
   // ดึงข้อมูลรายการสินค้าแบบแบ่งหน้า ค้นหา และกรอง
-  getProducts(page: number = 1, limit: number = 5, search: string = ''): Observable<PaginatedProducts> {
+  getProducts(page: number = 1, pageSize: number = 10, search: string = ''): Observable<PaginatedProducts> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('limit', limit.toString());
+      .set('pageSize', pageSize.toString());
 
     if (search.trim()) {
       params = params.set('search', search);

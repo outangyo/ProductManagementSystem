@@ -31,7 +31,7 @@ export class Products implements OnInit {
   protected readonly currentPage = signal(1);
   protected readonly totalPages = signal(1);
   protected readonly totalCount = signal(0);
-  protected readonly pageSize = signal(5);
+  protected readonly pageSize = signal(10);
   protected readonly searchQuery = signal('');
 
   // ควบคุมฟรอนต์เอนด์ Modals
@@ -45,6 +45,7 @@ export class Products implements OnInit {
   // ฟอร์มข้อมูลสินค้าพร้อม Validation เงื่อนไขราคา > 0 และสต็อก >= 0
   protected readonly productForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(200)]],
+    description: ['', [Validators.maxLength(1000)]],
     price: [0, [Validators.required, Validators.min(0.01)]],
     stock: [0, [Validators.required, Validators.min(0)]],
     imageUrl: ['', [Validators.maxLength(500)]],
@@ -68,7 +69,7 @@ export class Products implements OnInit {
       next: (res) => {
         this.products.set(res.items);
         this.totalPages.set(res.totalPages);
-        this.totalCount.set(res.totalCount);
+        this.totalCount.set(res.totalItems);
         this.isLoading.set(false);
       },
       error: () => {
@@ -101,6 +102,7 @@ export class Products implements OnInit {
     this.editingProductId.set(null);
     this.productForm.reset({
       name: '',
+      description: '',
       price: 0,
       stock: 0,
       imageUrl: '',
@@ -113,6 +115,7 @@ export class Products implements OnInit {
     this.editingProductId.set(product.id);
     this.productForm.patchValue({
       name: product.name,
+      description: product.description || '',
       price: product.price,
       stock: product.stock,
       imageUrl: product.imageUrl || '',
