@@ -17,6 +17,17 @@ export class AuthService {
   // ดึงค่าสิทธิ์แบบอ่านอย่างเดียวด้วย Computed Signals
   readonly isAuthenticated = computed(() => !!this.tokenSignal());
   readonly currentToken = computed(() => this.tokenSignal());
+  readonly isAdmin = computed(() => {
+    const token = this.tokenSignal();
+    if (!token) return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || payload['role'];
+      return role === 'Admin';
+    } catch {
+      return false;
+    }
+  });
 
   // ฟังก์ชันล็อกอินเข้าสู่ระบบ
   login(credentials: { username: string; password: string }): Observable<any> {
