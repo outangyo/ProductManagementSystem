@@ -59,7 +59,7 @@
 * Unit test ฝั่ง backend (xUnit / NUnit) อย่างน้อย service layer
 * Upload รูปสินค้า (Optional for now)
 * Dockerize ทั้ง backend และ frontend
-* Refresh token mechanism
+* [x] Refresh token mechanism [หลังบ้านเสร็จสิ้น]
 * [x] Role-based authorization (เช่น Admin ลบได้ แต่ User ดูได้อย่างเดียว) [หลังบ้านเสร็จสิ้น]
 
 ## 5. กติกาและแนวทางการพัฒนา (Development Rules)
@@ -81,5 +81,6 @@
   * [x] สร้าง `CategoriesController.cs` สำหรับจัดการหมวดหมู่สินค้า (CRUD 5 endpoints) พร้อมความปลอดภัย JWT และระบบดักตรวจข้อผิดพลาดเมื่อลบหมวดหมู่ที่มีสินค้าผูกอยู่เรียบร้อย
   * [x] พัฒนาระบบ Product CRUD API (สร้าง `ProductsController.cs` พร้อมฟังก์ชันค้นหา, คัดกรอง และแบ่งหน้า Pagination) เรียบร้อย
   * [x] พัฒนาระบบแบ่งบทบาทความปลอดภัยหลังบ้าน (Role-based Authorization) โดยล็อกสิทธิ์การเขียน/ลบ (POST, PUT, DELETE) ให้เฉพาะ Admin และเปิดให้อ่านได้อย่างเดียว (GET) สำหรับ User เรียบร้อย
-* **เป้าหมายสเต็ปถัดไป:**
+  * [x] พัฒนาระบบต่ออายุสิทธิ์หลักด้วยตั๋วสำรอง (Refresh Token) พร้อมกระบวนการหมุนเวียนคีย์ (Token Rotation) ในฝั่งหลังบ้านเรียบร้อย
+* **เป้าหมายสเต็ปถากไป:**
   * [ ] พัฒนาหน้าบ้านฝั่ง Angular (Login, Auth Guard, Dashboard, CRUD)
