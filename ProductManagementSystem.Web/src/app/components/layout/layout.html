@@ -1,0 +1,48 @@
+<div class="app-container">
+  <!-- 1. Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">📦</span>
+      <span class="brand-name">PMS System</span>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="/products" routerLinkActive="active" class="nav-item">
+        <span class="item-icon">🛍️</span>
+        <span class="item-text">Products</span>
+      </a>
+      <a routerLink="/categories" routerLinkActive="active" class="nav-item">
+        <span class="item-icon">📁</span>
+        <span class="item-text">Categories</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- 2. Main Content Area -->
+  <div class="main-content">
+    <!-- Header Topbar -->
+    <header class="main-header">
+      <div class="header-left">
+        <!-- Breadcrumb or page title can go here -->
+      </div>
+      <div class="header-right">
+        <div class="user-profile">
+          <span class="user-avatar">👤</span>
+          <div class="user-info">
+            <span class="user-name">{{ userFullName }}</span>
+            <span class="user-role">{{ username }}</span>
+          </div>
+        </div>
+        <button (click)="onLogout()" class="btn-logout" title="Sign Out">
+          <span class="logout-icon">🚪</span>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Nested Component Viewport -->
+    <main class="content-body">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
