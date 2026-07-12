@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -18,7 +18,19 @@ export class Layout {
   protected readonly userFullName = this.authService.getUserFullName();
   protected readonly username = this.authService.getUsername();
 
-  onLogout(): void {
+  // สถานะการเปิด/ปิดกล่องยืนยันการออกจากระบบ
+  protected readonly isLogoutConfirmOpen = signal(false);
+
+  openLogoutConfirm(): void {
+    this.isLogoutConfirmOpen.set(true);
+  }
+
+  closeLogoutConfirm(): void {
+    this.isLogoutConfirmOpen.set(false);
+  }
+
+  executeLogout(): void {
+    this.isLogoutConfirmOpen.set(false);
     this.authService.logout();
   }
 }

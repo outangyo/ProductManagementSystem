@@ -33,7 +33,7 @@
             <span class="user-role">{{ username }}</span>
           </div>
         </div>
-        <button (click)="onLogout()" class="btn-logout" title="Sign Out">
+        <button (click)="openLogoutConfirm()" class="btn-logout" title="Sign Out">
           <span class="logout-icon">🚪</span>
           <span>Sign Out</span>
         </button>
@@ -44,5 +44,22 @@
     <main class="content-body">
       <router-outlet></router-outlet>
     </main>
+  </div>
+
+  <!-- Custom Logout Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="isLogoutConfirmOpen()">
+    <div class="modal-card modal-confirm">
+      <div class="modal-header">
+        <h2>Confirm Sign Out</h2>
+        <button (click)="closeLogoutConfirm()" class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to sign out of the system?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="closeLogoutConfirm()" class="btn-secondary">Cancel</button>
+        <button type="button" (click)="executeLogout()" class="btn-danger">Sign Out</button>
+      </div>
+    </div>
   </div>
 </div>
