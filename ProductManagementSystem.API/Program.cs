@@ -64,6 +64,18 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// ตั้งค่า CORS เพื่ออนุญาตให้ Angular ยิงหา API ได้
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -77,6 +89,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAngular"); // ต้องเปิด CORS ก่อนทำการตรวจสอบสิทธิ์ (Authentication)
 
 app.UseAuthentication(); // ตรวจว่าใครเข้ามา (ต้องอยู่ก่อน UseAuthorization เสมอ)
 app.UseAuthorization();  // ตรวจว่ามีสิทธิ์ทำอะไรได้บ้าง

@@ -78,7 +78,7 @@
   * [x] สร้าง DTOs และระบบ TokenService (ITokenService, TokenService) เพื่อใช้ในกระบวนการออกตั๋ว JWT เรียบร้อย
   * [x] สร้าง `AuthController.cs` สำหรับ API `/api/auth/login` เพื่อออกตั๋ว JWT เรียบร้อย
   * [x] สร้าง DTOs สำหรับ Category และ Product พร้อมระบบ Validation (ราคา > 0, สต็อก >= 0) เรียบร้อย
-  * [x] สร้าง `CategoriesController.cs` สำหรับจัดการหมวดหมู่สินค้า (CRUD 5 endpoints) พร้อมความปลอดภัย JWT และระบบดักตรวจข้อผิดพลาดเมื่อลบหมวดหมู่ที่มีสินค้าผูกอยู่เรียบร้อย (ตัวโค้ดเขียนลงดิสก์แล้ว รอ Commit)
+  * [x] สร้าง `CategoriesController.cs` สำหรับจัดการหมวดหมู่สินค้า (CRUD 5 endpoints) พร้อมความปลอดภัย JWT และระบบดักตรวจข้อผิดพลาดเมื่อลบหมวดหมู่ที่มีสินค้าผูกอยู่เรียบร้อย
+  * [x] พัฒนาระบบ Product CRUD API (สร้าง `ProductsController.cs` พร้อมฟังก์ชันค้นหา, คัดกรอง และแบ่งหน้า Pagination) เรียบร้อย
 * **เป้าหมายสเต็ปถัดไป:**
-  * [ ] พัฒนาระบบ Product CRUD API (สร้าง `ProductsController.cs` พร้อมฟังก์ชันค้นหา, คัดกรอง และแบ่งหน้า Pagination)
   * [ ] พัฒนาหน้าบ้านฝั่ง Angular (Login, Auth Guard, Dashboard, CRUD)
