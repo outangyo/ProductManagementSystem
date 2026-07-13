@@ -6,14 +6,19 @@ using ProductManagementSystem.Db.Data;
 using ProductManagementSystem.API.Services;
 using Microsoft.OpenApi;
 
-// ตรวจสอบและสร้างโฟลเดอร์สำหรับเก็บไฟล์รูปภาพเพื่อให้ Kestrel รู้จัก wwwroot ตั้งแต่แรกเริ่ม
-var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+var builder = WebApplication.CreateBuilder(args);
+
+// ตรวจสอบและสร้างโฟลเดอร์สำหรับเก็บไฟล์รูปภาพใน WebRoot ของโปรเจกต์อย่างถูกต้องและปลอดภัย
+var webRoot = builder.Environment.WebRootPath;
+if (string.IsNullOrEmpty(webRoot))
+{
+    webRoot = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
+}
+var uploadsPath = Path.Combine(webRoot, "uploads");
 if (!Directory.Exists(uploadsPath))
 {
     Directory.CreateDirectory(uploadsPath);
 }
-
-var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>

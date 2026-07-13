@@ -80,7 +80,8 @@ public class AppDbContext : DbContext
                 Description = "Apple iPhone 15 Pro 128GB, Natural Titanium",
                 Price = 35000.00m,
                 Stock = 12,
-                CategoryId = 1
+                CategoryId = 1,
+                ImageUrl = "/images/iphone15.jpg"
             },
             new Product
             {
@@ -89,7 +90,8 @@ public class AppDbContext : DbContext
                 Description = "Apple MacBook Air 13-inch M3, 8GB RAM, 256GB SSD",
                 Price = 42000.00m,
                 Stock = 8,
-                CategoryId = 1
+                CategoryId = 1,
+                ImageUrl = "/images/macbook.jpg"
             },
             new Product
             {
@@ -98,7 +100,8 @@ public class AppDbContext : DbContext
                 Description = "Samsung 55-inch Crystal UHD 4K Smart TV",
                 Price = 15900.00m,
                 Stock = 15,
-                CategoryId = 2
+                CategoryId = 2,
+                ImageUrl = "/images/tv.jpg"
             },
             new Product
             {
@@ -107,7 +110,8 @@ public class AppDbContext : DbContext
                 Description = "Automatic Espresso Machine with Milk Frother",
                 Price = 4500.00m,
                 Stock = 20,
-                CategoryId = 2
+                CategoryId = 2,
+                ImageUrl = "/images/coffeemaker.jpg"
             },
             new Product
             {
@@ -116,7 +120,8 @@ public class AppDbContext : DbContext
                 Description = "Lightweight breathable sports shoes for men and women",
                 Price = 2200.00m,
                 Stock = 45,
-                CategoryId = 3
+                CategoryId = 3,
+                ImageUrl = "/images/shoes.jpg"
             }
         );
     }

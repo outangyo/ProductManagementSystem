@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using ProductManagementSystem.API.DTOs;
 using ProductManagementSystem.API.Services;
 using System.IO;
@@ -15,11 +16,13 @@ namespace ProductManagementSystem.API.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
+    private readonly IWebHostEnvironment _env;
 
-    // การดึงระบบจัดการบริการ (ProductService) เข้ามาใช้งานแทนการเข้าหา DbContext ตรงๆ
-    public ProductsController(IProductService productService)
+    // การดึงระบบจัดการบริการ (ProductService) และ IWebHostEnvironment เข้ามาใช้งาน
+    public ProductsController(IProductService productService, IWebHostEnvironment env)
     {
         _productService = productService;
+        _env = env;
     }
 
     // GET: /api/products (ดึงข้อมูลสินค้าทั้งหมด พร้อมระบบค้นหาและแบ่งหน้า)
@@ -30,6 +33,13 @@ public class ProductsController : ControllerBase
         [FromQuery] string? search = null)
     {
         var result = await _productService.GetProductsAsync(page, pageSize, search);
+        
+        // แปลง ImageUrl ให้เป็น URL แบบ Absolute
+        foreach (var item in result.Items)
+        {
+            item.ImageUrl = GetAbsoluteImageUrl(item.ImageUrl);
+        }
+
         return Ok(new
         {
             items = result.Items,
@@ -50,6 +60,9 @@ public class ProductsController : ControllerBase
             return NotFound(new { message = result.ErrorMessage });
         }
 
+        // แปลง ImageUrl ให้เป็น URL แบบ Absolute
+        result.Value!.ImageUrl = GetAbsoluteImageUrl(result.Value.ImageUrl);
+
         return Ok(result.Value);
     }
 
@@ -63,6 +76,9 @@ public class ProductsController : ControllerBase
         {
             return BadRequest(new { message = result.ErrorMessage });
         }
+
+        // แปลง ImageUrl ให้เป็น URL แบบ Absolute
+        result.Value!.ImageUrl = GetAbsoluteImageUrl(result.Value.ImageUrl);
 
         // ส่งสถานะ 201 Created กลับไป พร้อมชี้ปลายทาง Location ไปที่ปุ่มดูรายละเอียด (GetProduct)
         return CreatedAtAction(nameof(GetProduct), new { id = result.Value!.Id }, result.Value);
@@ -127,8 +143,13 @@ public class ProductsController : ControllerBase
             return BadRequest(new { message = "Only JPG, JPEG, PNG, and WEBP images are allowed." });
         }
 
-        // 4. เตรียมที่จัดเก็บโฟลเดอร์ wwwroot/uploads
-        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        // 4. เตรียมที่จัดเก็บโฟลเดอร์ WebRoot/uploads
+        var webRoot = _env.WebRootPath;
+        if (string.IsNullOrEmpty(webRoot))
+        {
+            webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        }
+        var uploadsFolder = Path.Combine(webRoot, "uploads");
         if (!Directory.Exists(uploadsFolder))
         {
             Directory.CreateDirectory(uploadsFolder);
@@ -149,5 +170,17 @@ public class ProductsController : ControllerBase
         var imageUrl = $"{request.Scheme}://{request.Host}/uploads/{uniqueFileName}";
 
         return Ok(new { imageUrl });
+    }
+
+    private string? GetAbsoluteImageUrl(string? relativeUrl)
+    {
+        if (string.IsNullOrEmpty(relativeUrl)) return null;
+        if (relativeUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || 
+            relativeUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        {
+            return relativeUrl;
+        }
+        var request = HttpContext.Request;
+        return $"{request.Scheme}://{request.Host}{relativeUrl}";
     }
 }

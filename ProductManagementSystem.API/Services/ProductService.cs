@@ -95,7 +95,7 @@ public class ProductService : IProductService
             Price = dto.Price,
             Stock = dto.Stock,
             CategoryId = dto.CategoryId,
-            ImageUrl = dto.ImageUrl
+            ImageUrl = GetRelativeImageUrl(dto.ImageUrl)
         };
 
         _context.Products.Add(product);
@@ -138,7 +138,7 @@ public class ProductService : IProductService
         product.Price = dto.Price;
         product.Stock = dto.Stock;
         product.CategoryId = dto.CategoryId;
-        product.ImageUrl = dto.ImageUrl;
+        product.ImageUrl = GetRelativeImageUrl(dto.ImageUrl);
 
         await _context.SaveChangesAsync();
         return ServiceResult<bool>.Success(true);
@@ -156,5 +156,24 @@ public class ProductService : IProductService
         await _context.SaveChangesAsync();
 
         return ServiceResult<bool>.Success(true);
+    }
+
+    private string? GetRelativeImageUrl(string? imageUrl)
+    {
+        if (string.IsNullOrEmpty(imageUrl)) return null;
+        try
+        {
+            if (imageUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || 
+                imageUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                var uri = new Uri(imageUrl);
+                return uri.AbsolutePath;
+            }
+            return imageUrl;
+        }
+        catch
+        {
+            return imageUrl;
+        }
     }
 }

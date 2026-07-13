@@ -1,6 +1,7 @@
 # Workspace Instructions
 
 โปรดปฏิบัติตามข้อกำหนดและกรอบงานของโปรเจคนี้อย่างเคร่งครัด
+ข้อ 1-4 ห้ามเเก้ไขเด็ดขาด
 
 ## 1. โจทย์ (Scenario)
 * บริษัทต้องการระบบจัดการสินค้าภายใน ให้ผู้ใช้ที่ login แล้วสามารถบริหารจัดการรายการสินค้าและหมวดหมู่สินค้าได้ ผู้สมัครต้องพัฒนาทั้งฝั่ง Frontend (Angular) และ Backend (.NET Web API) พร้อมระบบ Authentication ด้วย JWT
@@ -56,34 +57,17 @@
 * DB migration หรือ seed script
 
 ## 4. Advance Requirement
-* Unit test ฝั่ง backend (xUnit / NUnit) อย่างน้อย service layer
-* Upload รูปสินค้า (Optional for now)
-* Dockerize ทั้ง backend และ frontend
-* [x] Refresh token mechanism [หลังบ้านเสร็จสิ้น]
-* [x] Role-based authorization (เช่น Admin ลบได้ แต่ User ดูได้อย่างเดียว) [หลังบ้านเสร็จสิ้น]
+* [x] Unit test ฝั่ง backend (xUnit / NUnit) อย่างน้อย service layer [เสร็จสิ้น]
+* [x] Upload รูปสินค้า [เสร็จสิ้น]
+* [x] Dockerize ทั้ง backend และ frontend [เสร็จสิ้น]
+* [x] Refresh token mechanism [เสร็จสิ้น]
+* [x] Role-based authorization (เช่น Admin ลบได้ แต่ User ดูได้อย่างเดียว) [เสร็จสิ้น]
+
+## 6. สถานะการทำงานปัจจุบัน (Current Progress Tracking)
+* **การติดตามงานล่าสุด:**
+  * สามารถดูเป้าหมายปัจจุบันและประวัติงานที่ทำเสร็จแล้วทั้งหมดได้ที่ [progress-track.md](file:///C:/Project/ProductManagementSystem/.agents/rules/progress-track.md) เพื่อความสะอาดและประหยัด Token ในแชท (โดยเป้าหมายปัจจุบัน ณ ตอนนี้คือการทำ **Dockerize**)
 
 ## 5. กติกาและแนวทางการพัฒนา (Development Rules)
 * **การใช้สิทธิ์และการรันคำสั่ง (Permission & Command Execution):** AI ควรวางแผนการรันคำสั่งต่าง ๆ หรือการแก้ไขไฟล์โดยการรวบรวมทำพร้อมกันเป็นรอบ ๆ (Batching/Group operations) เพื่อลดภาระและไม่ให้ผู้พัฒนา (Developer) ต้องคอยกดยืนยัน (Approve/Enter) บ่อย ๆ ในระบบความปลอดภัยของ Antigravity
 * **การแลกเปลี่ยนและโต้แย้งทางเทคนิค (Active Collaboration & Feedback):** เมื่อผู้พัฒนา (Developer) สั่งงาน หรือให้ทำในสิ่งที่มีความผิดพลาด มีช่องโหว่ หรือมีจุดที่น่าสงสัยสังเกตได้ AI จะต้องทักท้วง แนะนำ และร่วมพูดคุยแลกเปลี่ยนความเห็นเพื่อหาวิธีที่ดีที่สุดร่วมกัน ไม่ทำตามคำสั่งโดยไร้ข้อสงสัย (No blind obedience) เพื่อให้เกิดการพูดคุยและการเรียนรู้ร่วมกันในการพัฒนาโค้ด
-* **การยืนยันก่อนลงมือทำ (Explicit Confirmation before Action):** ก่อนจะสร้างไฟล์ แก้ไขโค้ด หรือรันคำสั่งใด ๆ ทุกครั้ง ห้าม AI ลงมือทำโดยพละการ ต้องเสนอรายละเอียดให้ผู้พัฒนา (Developer) อ่านและอนุมัติว่า "จะให้เริ่มทำเลยไหม" เสมอ เพื่อรักษาจังหวะการเรียนรู้ร่วมกันทีละสเต็ปอย่างรอบคอบ *(ยกเว้นการอัปเดตความคืบหน้าในไฟล์ `workspace-instructions.md` นี้ที่ AI สามารถทำการอัปเดตได้ทันทีเพื่อไม่ให้เสียเวลาขั้นตอนการพัฒนา)*
-
-## 6. สถานะการทำงานปัจจุบัน (Current Progress Tracking)
-* **ล่าสุดทำอะไรเสร็จไปแล้ว:**
-  * [x] ออกแบบและสร้าง Entities: User, Category, Product ในโปรเจค `.Db`
-  * [x] สร้าง `AppDbContext.cs` พร้อมกำหนดกติกาการเชื่อมโยงข้อมูล (Fluent API) และ Seed Data เริ่มต้น
-  * [x] ดึงข้อมูลความลับ JWT Key ออกไปเก็บใน User Secrets ของเครื่องเพื่อความปลอดภัย และล้างคีย์ใน `appsettings.json` เป็นค่าว่าง
-  * [x] ลงทะเบียนบริการ JWT Bearer Authentication และติดตั้ง Middleware ใน `Program.cs` ฝั่ง API
-  * [x] รัน Migration (`InitialCreate`) และอัปเดตตารางเข้าสู่ฐานข้อมูลจริงบน SQL Server (localhost) เรียบร้อย
-  * [x] ลบโค้ดตัวอย่าง WeatherForecast (Clean up boilerplate) ออกจากโปรเจค API
-  * [x] สร้าง DTOs และระบบ TokenService (ITokenService, TokenService) เพื่อใช้ในกระบวนการออกตั๋ว JWT เรียบร้อย
-  * [x] สร้าง `AuthController.cs` สำหรับ API `/api/auth/login` เพื่อออกตั๋ว JWT เรียบร้อย
-  * [x] สร้าง DTOs สำหรับ Category และ Product พร้อมระบบ Validation (ราคา > 0, สต็อก >= 0) เรียบร้อย
-  * [x] สร้าง `CategoriesController.cs` สำหรับจัดการหมวดหมู่สินค้า (CRUD 5 endpoints) พร้อมความปลอดภัย JWT และระบบดักตรวจข้อผิดพลาดเมื่อลบหมวดหมู่ที่มีสินค้าผูกอยู่เรียบร้อย
-  * [x] พัฒนาระบบ Product CRUD API (สร้าง `ProductsController.cs` พร้อมฟังก์ชันค้นหา, คัดกรอง และแบ่งหน้า Pagination) เรียบร้อย
-  * [x] พัฒนาระบบแบ่งบทบาทความปลอดภัยหลังบ้าน (Role-based Authorization) โดยล็อกสิทธิ์การเขียน/ลบ (POST, PUT, DELETE) ให้เฉพาะ Admin และเปิดให้อ่านได้อย่างเดียว (GET) สำหรับ User เรียบร้อย
-  * [x] พัฒนาระบบต่ออายุสิทธิ์หลักด้วยตั๋วสำรอง (Refresh Token) พร้อมกระบวนการหมุนเวียนคีย์ (Token Rotation) ในฝั่งหลังบ้านเรียบร้อย
-  * [x] พัฒนาหน้าบ้านฝั่ง Angular (Login, Auth Guard, Dashboard Layout, Categories CRUD, Products CRUD พร้อม Pagination & Search) เสร็จสิ้นเรียบร้อย
-* **เป้าหมายสเต็ปถัดไป (เรียงตามลำดับที่วางแผนร่วมกับ bro):**
-  * [ ] 1. พัฒนาระบบอัปโหลดรูปภาพสินค้าจริง (File Upload) ทั้งหน้าบ้านและหลังบ้าน
-  * [ ] 2. เขียน Unit Test (xUnit) ฝั่งหลังบ้านครอบคลุม Service Layer (TokenService)
-  * [ ] 3. บรรจุตู้คอนเทนเนอร์ (Dockerize) ทั้งฝั่ง Backend และ Frontend ในขั้นตอนสุดท้าย
+* **ข้อบังคับพิเศษสำหรับการทำ Git Commit & Push (Strict Git Rules):** ทุกครั้งที่จะทำการ Commit หรือ Push โค้ด **AI ต้องถามและขออนุญาตก่อนเสมอ** โดยเมื่อเขียนโค้ดเสร็จแล้ว AI จะต้องแสดงชุดคำสั่ง (Git Command) และข้อความอธิบาย (Commit Message) ให้ผู้พัฒนาอ่าน ตรวจทาน และอนุมัติก่อนลงมือทำจริง **ห้ามทำการ Commit หรือ Push โดยอัตโนมัติหรือไม่มีการถามก่อนโดยเด็ดขาด**
