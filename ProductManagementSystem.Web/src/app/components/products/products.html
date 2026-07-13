@@ -241,20 +241,40 @@
             </small>
           </div>
 
-          <!-- Product Image URL -->
+          <!-- Product Image File Upload -->
           <div class="form-group">
-            <label for="imageUrl">Product Image URL (Optional)</label>
-            <input 
-              type="text" 
-              id="imageUrl" 
-              formControlName="imageUrl" 
-              placeholder="e.g. https://example.com/image.jpg..."
-              class="form-control"
-              [class.is-invalid]="productForm.get('imageUrl')?.invalid && productForm.get('imageUrl')?.touched"
-            />
-            <small class="error-text" *ngIf="productForm.get('imageUrl')?.errors?.['maxlength'] && productForm.get('imageUrl')?.touched">
-              Image URL cannot exceed 500 characters.
-            </small>
+            <label>Product Image</label>
+            <div class="file-upload-wrapper">
+              <div class="file-upload-zone" [class.has-preview]="productForm.get('imageUrl')?.value">
+                <input 
+                  type="file" 
+                  id="imageFile" 
+                  accept=".jpg,.jpeg,.png,.webp"
+                  (change)="onFileSelected($event)"
+                  class="file-input-hidden"
+                  [disabled]="isUploadingImage() || isLoading()"
+                />
+                <label for="imageFile" class="file-upload-label">
+                  <!-- Case 1: Image uploading in progress -->
+                  <span class="upload-loader" *ngIf="isUploadingImage()">
+                    <span class="spinner-small"></span> Uploading image...
+                  </span>
+
+                  <!-- Case 2: Image already uploaded / preview available -->
+                  <div class="image-preview-container" *ngIf="!isUploadingImage() && productForm.get('imageUrl')?.value">
+                    <img [src]="productForm.get('imageUrl')?.value" alt="Preview" />
+                    <span class="change-badge">🔄 Change Image</span>
+                  </div>
+
+                  <!-- Case 3: Empty state / No image -->
+                  <div class="upload-empty-state" *ngIf="!isUploadingImage() && !productForm.get('imageUrl')?.value">
+                    <span class="upload-icon">📷</span>
+                    <span class="upload-text">Click to upload product image</span>
+                    <span class="upload-hint">JPG, JPEG, PNG or WEBP (Max 2MB)</span>
+                  </div>
+                </label>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -299,8 +319,13 @@
         <div class="details-layout">
           <!-- Left Column: Image -->
           <div class="details-image-wrapper">
-            <img *ngIf="selectedProduct()?.imageUrl" [src]="selectedProduct()?.imageUrl" alt="Product Image" (error)="$any($event.target).style.display = 'none'" />
-            <span class="details-no-image">📦</span>
+            <img 
+              *ngIf="selectedProduct()?.imageUrl && !hasDetailsImageError" 
+              [src]="selectedProduct()?.imageUrl" 
+              alt="Product Image" 
+              (error)="hasDetailsImageError = true" 
+            />
+            <span class="details-no-image" *ngIf="!selectedProduct()?.imageUrl || hasDetailsImageError">📦</span>
           </div>
           <!-- Right Column: Info -->
           <div class="details-info">

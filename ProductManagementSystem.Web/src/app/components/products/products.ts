@@ -38,6 +38,7 @@ export class Products implements OnInit {
   protected readonly isModalOpen = signal(false);
   protected readonly isDeleteConfirmOpen = signal(false);
   protected readonly isDetailsOpen = signal(false);
+  protected readonly isUploadingImage = signal(false);
 
   // บันทึกการกระทำเป้าหมาย
   protected readonly editingProductId = signal<number | null>(null);
@@ -139,7 +140,47 @@ export class Products implements OnInit {
     this.productForm.reset();
   }
 
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      // ขนาดไฟล์ห้ามเกิน 2MB
+      if (file.size > 2 * 1024 * 1024) {
+        this.errorMessage.set("Image file size cannot exceed 2MB.");
+        input.value = '';
+        return;
+      }
+
+      // บังคับประเภทไฟล์เฉพาะรูปภาพ
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.errorMessage.set("Only JPG, JPEG, PNG, and WEBP image formats are allowed.");
+        input.value = '';
+        return;
+      }
+
+      this.isUploadingImage.set(true);
+      this.errorMessage.set(null);
+
+      this.productService.uploadImage(file).subscribe({
+        next: (res) => {
+          this.productForm.patchValue({ imageUrl: res.imageUrl });
+          this.isUploadingImage.set(false);
+        },
+        error: (err) => {
+          this.errorMessage.set(err.error?.message || "Failed to upload image. Please try again.");
+          this.isUploadingImage.set(false);
+          input.value = '';
+        }
+      });
+    }
+  }
+
+  hasDetailsImageError = false;
+
   openDetailsModal(product: Product): void {
+    this.hasDetailsImageError = false;
     this.selectedProduct.set(product);
     this.isDetailsOpen.set(true);
   }
