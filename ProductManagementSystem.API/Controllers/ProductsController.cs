@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ProductManagementSystem.API.DTOs;
-using ProductManagementSystem.Db.Data;
-using ProductManagementSystem.Db.Entities;
+using ProductManagementSystem.API.Services;
+using System.IO;
+using System;
+using System.Threading.Tasks;
 
 namespace ProductManagementSystem.API.Controllers;
 
@@ -12,11 +14,12 @@ namespace ProductManagementSystem.API.Controllers;
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IProductService _productService;
 
-    public ProductsController(AppDbContext context)
+    // การดึงระบบจัดการบริการ (ProductService) เข้ามาใช้งานแทนการเข้าหา DbContext ตรงๆ
+    public ProductsController(IProductService productService)
     {
-        _context = context;
+        _productService = productService;
     }
 
     // GET: /api/products (ดึงข้อมูลสินค้าทั้งหมด พร้อมระบบค้นหาและแบ่งหน้า)
@@ -26,47 +29,14 @@ public class ProductsController : ControllerBase
         [FromQuery] int pageSize = 10, 
         [FromQuery] string? search = null)
     {
-        // 1. ดึงข้อมูลสินค้าพร้อม Join ตารางหมวดหมู่ด้วย Include
-        var query = _context.Products.Include(p => p.Category).AsQueryable();
-
-        // 2. กรองข้อมูลเฉพาะชื่อสินค้าที่มีข้อความสะกดตรงกับคำค้นหา
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
-        }
-
-        // 3. นับรายการรวมเพื่อใช้คำนวณแบ่งหน้า
-        var totalItems = await query.CountAsync();
-
-        // 4. ใช้ Skip และ Take ในการแบ่งช่วงข้อมูลที่ดึง และจัดโครงสร้างใส่ DTO
-        var products = await query
-            .OrderBy(p => p.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Price = p.Price,
-                Stock = p.Stock,
-                CategoryId = p.CategoryId,
-                CategoryName = p.Category.Name,
-                ImageUrl = p.ImageUrl
-            })
-            .ToListAsync();
-
-        // 5. คำนวณจำนวนหน้าทั้งหมด
-        var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
-
-        // 6. ตอบกลับข้อมูลพร้อมโครงสร้าง Pagination
+        var result = await _productService.GetProductsAsync(page, pageSize, search);
         return Ok(new
         {
-            items = products,
-            totalItems = totalItems,
-            currentPage = page,
-            pageSize = pageSize,
-            totalPages = totalPages
+            items = result.Items,
+            totalItems = result.TotalItems,
+            currentPage = result.CurrentPage,
+            pageSize = result.PageSize,
+            totalPages = result.TotalPages
         });
     }
 
@@ -74,32 +44,13 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
-        // 1. ค้นหาสินค้าตาม ID พร้อมดึงตาราง Category (Include) เพื่อดึงชื่อหมวดหมู่มาร่วมด้วย
-        var product = await _context.Products
-            .Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-        // 2. หากไม่พบสินค้า ให้ส่ง HTTP 404 กลับพร้อมข้อความเตือน
-        if (product == null)
+        var result = await _productService.GetProductByIdAsync(id);
+        if (result.IsNotFound)
         {
-            // ส่ง HTTP 404 NotFound
-            return NotFound(new { message = "Product not found." });
+            return NotFound(new { message = result.ErrorMessage });
         }
 
-        // 3. แปลงข้อมูลดิบ Entity เป็น DTO เพื่อส่งให้กับ Angular
-        var productDto = new ProductDto
-        {
-            Id = product.Id,
-            Name = product.Name,
-            Description = product.Description,
-            Price = product.Price,
-            Stock = product.Stock,
-            CategoryId = product.CategoryId,
-            CategoryName = product.Category.Name,
-            ImageUrl = product.ImageUrl
-        };
-
-        return Ok(productDto);
+        return Ok(result.Value);
     }
 
     // POST: /api/products (เพิ่มสินค้าใหม่)
@@ -107,46 +58,14 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ProductDto>> CreateProduct([FromBody] CreateProductDto dto)
     {
-        // 1. ตรวจสอบความถูกต้องระดับความสัมพันธ์ (Foreign Key): ตรวจว่ามีหมวดหมู่ ID นี้ในระบบจริงไหม
-        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == dto.CategoryId);
-        if (!categoryExists)
+        var result = await _productService.CreateProductAsync(dto);
+        if (!result.IsSuccess)
         {
-            return BadRequest(new { message = "The specified category is invalid or does not exist." });
+            return BadRequest(new { message = result.ErrorMessage });
         }
 
-        // 2. แปลง DTO เป็น Entity และสั่งบันทึกเข้าฐานข้อมูล
-        var product = new Product
-        {
-            Name = dto.Name,
-            Description = dto.Description,
-            Price = dto.Price,
-            Stock = dto.Stock,
-            CategoryId = dto.CategoryId,
-            ImageUrl = dto.ImageUrl
-        };
-
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
-
-        // 3. โหลดข้อมูลหมวดหมู่เพื่อนำชื่อหมวดหมู่ (CategoryName) ไปป้อนให้กับ DTO ส่งกลับไปให้ Angular
-        var category = await _context.Categories.FindAsync(dto.CategoryId);
-        var categoryName = category?.Name ?? string.Empty;
-
-        // 4. จัดรูปแบบข้อมูลออกในฐานะ DTO
-        var productDto = new ProductDto
-        {
-            Id = product.Id,
-            Name = product.Name,
-            Description = product.Description,
-            Price = product.Price,
-            Stock = product.Stock,
-            CategoryId = product.CategoryId,
-            CategoryName = categoryName,
-            ImageUrl = product.ImageUrl
-        };
-
-        // 5. ส่งสถานะ 201 Created กลับไป พร้อมชี้ปลายทาง Location ไปที่ปุ่มดูรายละเอียด (GetProduct)
-        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, productDto);
+        // ส่งสถานะ 201 Created กลับไป พร้อมชี้ปลายทาง Location ไปที่ปุ่มดูรายละเอียด (GetProduct)
+        return CreatedAtAction(nameof(GetProduct), new { id = result.Value!.Id }, result.Value);
     }
 
     // PUT: /api/products/{id} (แก้ไขข้อมูลสินค้า)
@@ -154,32 +73,17 @@ public class ProductsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProduct(int id, [FromBody] CreateProductDto dto)
     {
-        // 1. ค้นหาสินค้าที่ต้องการแก้ไขในฐานข้อมูล
-        var product = await _context.Products.FindAsync(id);
-        if (product == null)
+        var result = await _productService.UpdateProductAsync(id, dto);
+        if (result.IsNotFound)
         {
-            return NotFound(new { message = "Product to update not found." });
+            return NotFound(new { message = result.ErrorMessage });
+        }
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new { message = result.ErrorMessage });
         }
 
-        // 2. ตรวจสอบความถูกต้องระดับความสัมพันธ์ (Foreign Key): ตรวจว่ามีหมวดหมู่ ID ใหม่นี้ในระบบจริงไหม
-        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == dto.CategoryId);
-        if (!categoryExists)
-        {
-            return BadRequest(new { message = "The specified category is invalid or does not exist." });
-        }
-
-        // 3. ปรับปรุงค่าฟิลด์ต่าง ๆ ของ Entity
-        product.Name = dto.Name;
-        product.Description = dto.Description;
-        product.Price = dto.Price;
-        product.Stock = dto.Stock;
-        product.CategoryId = dto.CategoryId;
-        product.ImageUrl = dto.ImageUrl;
-
-        // 4. บันทึกผลการเปลี่ยนแปลงลงฐานข้อมูล
-        await _context.SaveChangesAsync();
-
-        // 5. คืนสถานะ 204 No Content ตามมาตรฐานของ PUT เมื่อแก้ไขข้อมูลสำเร็จ
+        // คืนสถานะ 204 No Content ตามมาตรฐานของ PUT เมื่อแก้ไขข้อมูลสำเร็จ
         return NoContent();
     }
 
@@ -188,18 +92,13 @@ public class ProductsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(int id)
     {
-        // 1. ค้นหาสินค้าที่ต้องการลบในฐานข้อมูล
-        var product = await _context.Products.FindAsync(id);
-        if (product == null)
+        var result = await _productService.DeleteProductAsync(id);
+        if (result.IsNotFound)
         {
-            return NotFound(new { message = "Product to delete not found." });
+            return NotFound(new { message = result.ErrorMessage });
         }
 
-        // 2. ลบข้อมูลสินค้าออกจากฐานข้อมูล
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
-
-        // 3. คืนสถานะ 204 No Content เพื่อชี้ว่าลบสำเร็จแล้ว
+        // คืนสถานะ 204 No Content เพื่อชี้ว่าลบสำเร็จแล้ว
         return NoContent();
     }
 
