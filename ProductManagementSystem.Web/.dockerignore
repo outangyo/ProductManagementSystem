@@ -8,4 +8,3 @@ dist
 .prettierrc
 README.md
 Dockerfile
-nginx.conf
