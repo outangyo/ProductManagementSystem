@@ -6,6 +6,13 @@ using ProductManagementSystem.Db.Data;
 using ProductManagementSystem.API.Services;
 using Microsoft.OpenApi;
 
+// ตรวจสอบและสร้างโฟลเดอร์สำหรับเก็บไฟล์รูปภาพเพื่อให้ Kestrel รู้จัก wwwroot ตั้งแต่แรกเริ่ม
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -89,6 +96,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles(); // เปิดสิทธิ์ให้บริการโฮสต์รูปภาพ
 
 app.UseCors("AllowAngular"); // ต้องเปิด CORS ก่อนทำการตรวจสอบสิทธิ์ (Authentication)
 

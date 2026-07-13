@@ -202,4 +202,53 @@ public class ProductsController : ControllerBase
         // 3. คืนสถานะ 204 No Content เพื่อชี้ว่าลบสำเร็จแล้ว
         return NoContent();
     }
+
+    // POST: /api/products/upload (อัปโหลดรูปภาพสินค้า)
+    [Authorize(Roles = "Admin")] // อนุญาตเฉพาะ Admin
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadImage(IFormFile file)
+    {
+        // 1. ตรวจสอบว่ามีไฟล์ส่งมาจริงไหม
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest(new { message = "No file uploaded." });
+        }
+
+        // 2. จำกัดขนาดไฟล์ห้ามเกิน 2MB
+        if (file.Length > 2 * 1024 * 1024)
+        {
+            return BadRequest(new { message = "File size cannot exceed 2MB." });
+        }
+
+        // 3. กรองสกุลไฟล์ บังคับเฉพาะรูปภาพ
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(extension))
+        {
+            return BadRequest(new { message = "Only JPG, JPEG, PNG, and WEBP images are allowed." });
+        }
+
+        // 4. เตรียมที่จัดเก็บโฟลเดอร์ wwwroot/uploads
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        // 5. สุ่มตั้งชื่อไฟล์ใหม่ด้วย GUID ป้องกันชื่อซ้ำ
+        var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        // 6. เขียนไฟล์รูปภาพลงดิสก์ของเซิร์ฟเวอร์
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        // 7. คืนค่า URL สมบูรณ์กลับไปให้หน้าบ้าน (เช่น https://localhost:7133/uploads/xxx.png)
+        var request = HttpContext.Request;
+        var imageUrl = $"{request.Scheme}://{request.Host}/uploads/{uniqueFileName}";
+
+        return Ok(new { imageUrl });
+    }
 }
