@@ -26,7 +26,7 @@ export interface PaginatedProducts {
 })
 export class ProductService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://localhost:7133/api/products';
+  private readonly apiUrl = 'http://localhost:5040/api/products';
 
   // ดึงข้อมูลรายการสินค้าแบบแบ่งหน้า ค้นหา และกรอง
   getProducts(page: number = 1, pageSize: number = 10, search: string = ''): Observable<PaginatedProducts> {

@@ -13,6 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ProductManagementSystem.API/ProductManagementSystem.API.csproj", "ProductManagementSystem.API/"]
+COPY ["ProductManagementSystem.Db/ProductManagementSystem.Db.csproj", "ProductManagementSystem.Db/"]
 RUN dotnet restore "./ProductManagementSystem.API/ProductManagementSystem.API.csproj"
 COPY . .
 WORKDIR "/src/ProductManagementSystem.API"

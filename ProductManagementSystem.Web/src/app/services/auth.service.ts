@@ -9,7 +9,7 @@ import { Observable, tap } from 'rxjs';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly apiUrl = 'https://localhost:7133/api/auth';
+  private readonly apiUrl = 'http://localhost:5040/api/auth';
 
   // ใช้ Signal เก็บค่า Token สำหรับการตรวจสอบสิทธิ์แบบเรียลไทม์
   private readonly tokenSignal = signal<string | null>(localStorage.getItem('token'));

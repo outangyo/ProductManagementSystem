@@ -13,7 +13,7 @@ export interface Category {
 })
 export class CategoryService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://localhost:7133/api/categories';
+  private readonly apiUrl = 'http://localhost:5040/api/categories';
 
   // ดึงรายการหมวดหมู่ทั้งหมด
   getCategories(): Observable<Category[]> {
