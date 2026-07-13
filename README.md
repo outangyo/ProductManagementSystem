@@ -73,6 +73,7 @@
    ```bash
    npm start
    ```
+   *(หรือใช้คำสั่ง `ng serve` หากเครื่องของคุณมีการติดตั้ง Angular CLI แบบ Global ไว้แล้ว)*
 4. เปิดเบราว์เซอร์เข้าใช้งานทาง [http://localhost:4200](http://localhost:4200)
 
 ---
