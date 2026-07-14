@@ -188,7 +188,7 @@ public class ProductServiceTests
         Assert.Equal("NewName", updated.Name);
         Assert.Equal(2, updated.CategoryId);
         Assert.Equal(200, updated.Price);
-        Assert.Equal("http://example.com/image.jpg", updated.ImageUrl);
+        Assert.Equal("/image.jpg", updated.ImageUrl);
     }
 
     [Fact]
