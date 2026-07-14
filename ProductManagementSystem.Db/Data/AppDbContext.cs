@@ -122,6 +122,106 @@ public class AppDbContext : DbContext
                 Stock = 45,
                 CategoryId = 3,
                 ImageUrl = "/images/shoes.jpg"
+            },
+            new Product
+            {
+                Id = 6,
+                Name = "iPad Air M2",
+                Description = "Apple iPad Air 11-inch M2, 128GB Wi-Fi, Space Gray",
+                Price = 23900.00m,
+                Stock = 15,
+                CategoryId = 1,
+                ImageUrl = "/images/ipad.jpg"
+            },
+            new Product
+            {
+                Id = 7,
+                Name = "Bluetooth Speaker",
+                Description = "Portable waterproof wireless speaker with deep bass",
+                Price = 1890.00m,
+                Stock = 30,
+                CategoryId = 1,
+                ImageUrl = "/images/speaker.jpg"
+            },
+            new Product
+            {
+                Id = 8,
+                Name = "Mechanical Keyboard",
+                Description = "RGB backlit hot-swappable mechanical gaming keyboard",
+                Price = 3200.00m,
+                Stock = 25,
+                CategoryId = 1,
+                ImageUrl = "/images/keyboard.jpg"
+            },
+            new Product
+            {
+                Id = 9,
+                Name = "Wireless Gaming Mouse",
+                Description = "Lightweight ergonomic rechargeable gaming mouse",
+                Price = 2490.00m,
+                Stock = 40,
+                CategoryId = 1,
+                ImageUrl = "/images/mouse.jpg"
+            },
+            new Product
+            {
+                Id = 10,
+                Name = "Air Fryer",
+                Description = "Digital hot air fryer 4.5L with preset cooking modes",
+                Price = 3590.00m,
+                Stock = 18,
+                CategoryId = 2,
+                ImageUrl = "/images/airfryer.jpg"
+            },
+            new Product
+            {
+                Id = 11,
+                Name = "Electric Kettle",
+                Description = "Double-wall stainless steel rapid boil electric kettle 1.7L",
+                Price = 1290.00m,
+                Stock = 50,
+                CategoryId = 2,
+                ImageUrl = "/images/kettle.jpg"
+            },
+            new Product
+            {
+                Id = 12,
+                Name = "Personal Blender",
+                Description = "High-speed mini bullet blender for smoothies and shakes",
+                Price = 1590.00m,
+                Stock = 22,
+                CategoryId = 2,
+                ImageUrl = "/images/blender.jpg"
+            },
+            new Product
+            {
+                Id = 13,
+                Name = "Yoga Mat",
+                Description = "Non-slip eco-friendly exercise mat with carrying strap",
+                Price = 690.00m,
+                Stock = 60,
+                CategoryId = 3,
+                ImageUrl = "/images/yogamat.jpg"
+            },
+            new Product
+            {
+                Id = 14,
+                Name = "Dumbbell Set 10kg",
+                Description = "Adjustable chrome dumbbell set with storage case",
+                Price = 1490.00m,
+                Stock = 35,
+                CategoryId = 3,
+                ImageUrl = "/images/dumbbell.jpg"
+            },
+            new Product
+            {
+                Id = 15,
+                Name = "Camping Tent",
+                Description = "Waterproof double-layer family camping tent for 3-4 persons",
+                Price = 2990.00m,
+                Stock = 10,
+                CategoryId = 3,
+                ImageUrl = "/images/tent.jpg"
             }
         );
     }
