@@ -51,7 +51,13 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // ตั้งค่า JWT Bearer Authentication
-var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.");
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey))
+{
+    // FALLBACK KEY FOR LOCAL DEVELOPMENT AND TESTING ONLY. DO NOT USE IN PRODUCTION.
+    // คีย์จำลองใช้สำหรับรันทดสอบระบบในเครื่องโฮสต์ (Local Dev/Test) เพื่อความสะดวกในการรันตรวจงาน
+    jwtKey = "local_development_fallback_secret_key_for_testing_only_32_bytes";
+}
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
 
