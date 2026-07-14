@@ -57,7 +57,7 @@ $text-muted: #94a3b8;
 }
 
 .table-card {
-  min-height: 200px;
+  min-height: 120px;
   overflow: hidden;
 }
 
@@ -141,9 +141,14 @@ $text-muted: #94a3b8;
   color: $text-muted;
 }
 
-.table-actions {
-  display: flex;
-  gap: 10px;
+.actions-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.actions-wrapper {
+  display: inline-flex;
+  gap: 8px;
   justify-content: center;
 }
 

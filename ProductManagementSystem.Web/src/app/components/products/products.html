@@ -96,16 +96,18 @@
             <span class="stock-badge badge-low" *ngIf="prod.stock > 0 && prod.stock < 10">Low ({{ prod.stock }})</span>
             <span class="stock-badge badge-in" *ngIf="prod.stock >= 10">{{ prod.stock }} units</span>
           </td>
-          <td class="table-actions">
-            <button (click)="openDetailsModal(prod)" class="btn-action btn-view" title="View Details">
-              👁️ View
-            </button>
-            <button *ngIf="isAdmin()" (click)="openEditModal(prod)" class="btn-action btn-edit" title="Edit">
-              📝 Edit
-            </button>
-            <button *ngIf="isAdmin()" (click)="confirmDelete(prod.id)" class="btn-action btn-delete" title="Delete">
-              🗑️ Delete
-            </button>
+          <td class="actions-cell">
+            <div class="actions-wrapper">
+              <button (click)="openDetailsModal(prod)" class="btn-action btn-view" title="View Details">
+                👁️ View
+              </button>
+              <button *ngIf="isAdmin()" (click)="openEditModal(prod)" class="btn-action btn-edit" title="Edit">
+                📝 Edit
+              </button>
+              <button *ngIf="isAdmin()" (click)="confirmDelete(prod.id)" class="btn-action btn-delete" title="Delete">
+                🗑️ Delete
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>

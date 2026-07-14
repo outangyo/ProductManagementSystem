@@ -35,11 +35,11 @@
     <table class="data-table" *ngIf="categories().length > 0">
       <thead>
         <tr>
-          <th style="width: 70px; text-align: center;">Order</th>
-          <th style="width: 100px;">ID</th>
-          <th>Category Name</th>
+          <th style="width: 80px; text-align: center;">Order</th>
+          <th style="width: 120px;">ID</th>
+          <th style="width: 250px;">Category Name</th>
           <th>Description</th>
-          <th *ngIf="isAdmin()" style="width: 180px; text-align: center;">Actions</th>
+          <th *ngIf="isAdmin()" style="width: 200px; text-align: center;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -48,13 +48,15 @@
           <td class="cat-id">#{{ cat.id }}</td>
           <td class="cat-name">{{ cat.name }}</td>
           <td class="cat-desc">{{ cat.description || '-' }}</td>
-          <td *ngIf="isAdmin()" class="table-actions">
-            <button (click)="openEditModal(cat)" class="btn-action btn-edit" title="Edit">
-              📝 Edit
-            </button>
-            <button (click)="confirmDelete(cat.id)" class="btn-action btn-delete" title="Delete">
-              🗑️ Delete
-            </button>
+          <td *ngIf="isAdmin()" class="actions-cell">
+            <div class="actions-wrapper">
+              <button (click)="openEditModal(cat)" class="btn-action btn-edit" title="Edit">
+                📝 Edit
+              </button>
+              <button (click)="confirmDelete(cat.id)" class="btn-action btn-delete" title="Delete">
+                🗑️ Delete
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
